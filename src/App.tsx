@@ -164,31 +164,25 @@ const App: React.FC = () => {
 
   const handleAddMoneyToGoal = (goalId: string) => {
     const amount = parseFloat(addMoneyAmount);
-    const goal = savingsGoals.find(g => g.id === goalId);
-    
-    if (amount > 0 && goal) {
-      const maxAmount = Math.min(balance, goal.target - goal.current);
-      const actualAmount = Math.min(amount, maxAmount);
+    if (amount > 0) {
+      setSavingsGoals(savingsGoals.map(g => 
+        g.id === goalId 
+          ? { ...g, current: g.current + amount }
+          : g
+      ));
       
-      if (actualAmount > 0) {
-        setSavingsGoals(savingsGoals.map(g => 
-          g.id === goalId 
-            ? { ...g, current: g.current + actualAmount }
-            : g
-        ));
-        
-        // Add transaction for the savings
-        const savingsTransaction: Transaction = {
-          id: Date.now().toString(),
-          amount: actualAmount,
-          category: 'Savings',
-          description: `Added to ${goal.name}`,
-          date: new Date().toISOString().split('T')[0],
-          type: 'expense'
-        };
-        
-        setTransactions([savingsTransaction, ...transactions]);
-      }
+      // Add transaction for the savings
+      const goal = savingsGoals.find(g => g.id === goalId);
+      const savingsTransaction: Transaction = {
+        id: Date.now().toString(),
+        amount: amount,
+        category: 'Savings',
+        description: `Added to ${goal?.name}`,
+        date: new Date().toISOString().split('T')[0],
+        type: 'expense'
+      };
+      
+      setTransactions([savingsTransaction, ...transactions]);
     }
     
     setAddMoneyAmount('');
@@ -369,7 +363,7 @@ const App: React.FC = () => {
                 {remaining > 0 && maxAddAmount > 0 && (
                   <button
                     onClick={() => setShowAddMoney(goal.id)}
-                    className="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors text-sm font-medium"
+                    className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
                   >
                     Add Money
                   </button>
