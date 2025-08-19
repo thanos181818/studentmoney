@@ -5,6 +5,7 @@ const BillSplitting: React.FC = () => {
   const [showAddFriends, setShowAddFriends] = useState(false);
   const [showAddExpense, setShowAddExpense] = useState(false);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [showRequestModal, setShowRequestModal] = useState(false);
   const [selectedPayment, setSelectedPayment] = useState<{name: string, amount: number, avatar: string} | null>(null);
   const [newExpense, setNewExpense] = useState({
     title: '',
@@ -19,7 +20,7 @@ const BillSplitting: React.FC = () => {
     { id: 4, name: 'Vikram', avatar: '👨', phone: '+91 65432 10987' }
   ];
 
-  const groupExpenses = [
+  const [groupExpenses, setGroupExpenses] = useState([
     {
       id: 1,
       title: 'Pizza Night',
@@ -38,26 +39,45 @@ const BillSplitting: React.FC = () => {
       splitAmount: 267,
       paidBy: 'Sneha'
     }
-  ];
+  ]);
 
-  const settlements = [
+  const [settlements, setSettlements] = useState([
     { name: 'Priya', amount: 200, type: 'owes', avatar: '👩' },
     { name: 'Rahul', amount: 150, type: 'owes', avatar: '👨' },
     { name: 'Sneha', amount: 267, type: 'owed', avatar: '👩' }
-  ];
+  ]);
 
   const youOwe = settlements.filter(s => s.type === 'owes').reduce((sum, s) => sum + s.amount, 0);
   const youAreOwed = settlements.filter(s => s.type === 'owed').reduce((sum, s) => sum + s.amount, 0);
 
   const handlePayment = (settlement: {name: string, amount: number, avatar: string}) => {
     setSelectedPayment(settlement);
-    setShowPaymentModal(true);
+    const settlementData = settlements.find(s => s.name === settlement.name);
+    if (settlementData?.type === 'owed') {
+      setShowRequestModal(true);
+    } else {
+      setShowPaymentModal(true);
+    }
   };
 
   const processPayment = () => {
-    // Here you would integrate with actual payment processing
-    alert(`Payment of ₹${selectedPayment?.amount} sent to ${selectedPayment?.name}!`);
+    if (!selectedPayment) return;
+    
+    // Remove the settlement from the list
+    setSettlements(prev => prev.filter(s => s.name !== selectedPayment.name));
+    
+    // Show success message
+    alert(`Payment of ₹${selectedPayment.amount} sent to ${selectedPayment.name}!`);
     setShowPaymentModal(false);
+    setSelectedPayment(null);
+  };
+
+  const processRequest = () => {
+    if (!selectedPayment) return;
+    
+    // Show success message for request
+    alert(`Payment request of ₹${selectedPayment.amount} sent to ${selectedPayment.name}!`);
+    setShowRequestModal(false);
     setSelectedPayment(null);
   };
 
@@ -65,8 +85,45 @@ const BillSplitting: React.FC = () => {
     e.preventDefault();
     if (!newExpense.title || !newExpense.amount || newExpense.participants.length === 0) return;
 
-    // Add the new expense logic here
-    alert(`Added expense: ${newExpense.title} for ₹${newExpense.amount} split between ${newExpense.participants.join(', ')}`);
+    const splitAmount = Math.round(parseInt(newExpense.amount) / newExpense.participants.length);
+    
+    // Create new expense
+    const newExpenseItem = {
+      id: Date.now(),
+      title: newExpense.title,
+      amount: parseInt(newExpense.amount),
+      participants: newExpense.participants,
+      date: 'Today',
+      splitAmount,
+      paidBy: 'You'
+    };
+    
+    // Add to group expenses
+    setGroupExpenses(prev => [newExpenseItem, ...prev]);
+    
+    // Update settlements - add amounts for participants who owe you
+    const participantsWhoOwe = newExpense.participants.filter(p => p !== 'You');
+    if (participantsWhoOwe.length > 0) {
+      setSettlements(prev => {
+        const updated = [...prev];
+        participantsWhoOwe.forEach(participant => {
+          const existingIndex = updated.findIndex(s => s.name === participant);
+          if (existingIndex >= 0) {
+            updated[existingIndex].amount += splitAmount;
+          } else {
+            // Find friend avatar
+            const friend = friends.find(f => f.name === participant);
+            updated.push({
+              name: participant,
+              amount: splitAmount,
+              type: 'owes',
+              avatar: friend?.avatar || '👤'
+            });
+          }
+        });
+        return updated;
+      });
+    }
     
     // Reset form
     setNewExpense({
@@ -215,7 +272,7 @@ const BillSplitting: React.FC = () => {
                 </div>
                 <button className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center space-x-1">
                   <Send className="h-4 w-4" />
-                  <span onClick={() => handlePayment(settlement)}>Pay</span>
+                  <span onClick={() => handlePayment(settlement)}>{settlement.type === 'owed' ? 'Request' : 'Pay'}</span>
                 </button>
               </div>
             </div>
@@ -387,6 +444,65 @@ const BillSplitting: React.FC = () => {
                 className="flex-1 bg-green-600 hover:bg-green-700 text-white px-4 py-3 rounded-xl font-medium transition-colors"
               >
                 Send Payment
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Request Payment Modal */}
+      {showRequestModal && selectedPayment && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-2xl p-6 w-full max-w-md">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-xl font-semibold text-gray-900">Request Payment</h3>
+              <button 
+                onClick={() => setShowRequestModal(false)}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <X className="h-6 w-6" />
+              </button>
+            </div>
+            
+            <div className="text-center mb-6">
+              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl">{selectedPayment.avatar}</span>
+              </div>
+              <h4 className="text-lg font-semibold text-gray-900 mb-2">
+                Request from {selectedPayment.name}
+              </h4>
+              <div className="text-3xl font-bold text-blue-600 mb-4">
+                ₹{selectedPayment.amount}
+              </div>
+            </div>
+
+            <div className="space-y-3 mb-6">
+              <button className="w-full p-4 border-2 border-gray-200 rounded-xl hover:border-blue-300 transition-colors flex items-center">
+                <span className="text-2xl mr-3">💬</span>
+                <span className="font-medium">Send WhatsApp Message</span>
+              </button>
+              <button className="w-full p-4 border-2 border-gray-200 rounded-xl hover:border-blue-300 transition-colors flex items-center">
+                <span className="text-2xl mr-3">📱</span>
+                <span className="font-medium">Send SMS</span>
+              </button>
+              <button className="w-full p-4 border-2 border-gray-200 rounded-xl hover:border-blue-300 transition-colors flex items-center">
+                <span className="text-2xl mr-3">📧</span>
+                <span className="font-medium">Send Email</span>
+              </button>
+            </div>
+            
+            <div className="flex space-x-3">
+              <button
+                onClick={() => setShowRequestModal(false)}
+                className="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={processRequest}
+                className="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-xl font-medium transition-colors"
+              >
+                Send Request
               </button>
             </div>
           </div>
