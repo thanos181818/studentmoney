@@ -18,12 +18,12 @@ import {
 const HomePage: React.FC = () => {
   const features = [
     {
-      icon: <PieChart className="h-12 w-12 text-indigo-600" />,
+      icon: <PieChart className="h-12 w-12 text-green-600" />,
       title: "Smart Expense Tracking",
       description: "Automatically categorize canteen, rent, and outing expenses with AI"
     },
     {
-      icon: <Users className="h-12 w-12 text-purple-600" />,
+      icon: <Users className="h-12 w-12 text-green-600" />,
       title: "Bill Splitting Made Easy",
       description: "Split hostel bills, pizza orders, and movie tickets with your squad"
     },
@@ -33,7 +33,7 @@ const HomePage: React.FC = () => {
       description: "Save for Goa trips, new phones, and emergency funds with visual goals"
     },
     {
-      icon: <Zap className="h-12 w-12 text-yellow-600" />,
+      icon: <Zap className="h-12 w-12 text-green-600" />,
       title: "UPI Integration",
       description: "Connect GPay, PhonePe, Paytm for seamless expense tracking"
     }

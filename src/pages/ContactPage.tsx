@@ -42,7 +42,7 @@ const ContactPage: React.FC = () => {
 
   const contactInfo = [
     {
-      icon: <Mail className="h-6 w-6 text-indigo-600" />,
+      icon: <Mail className="h-6 w-6 text-green-600" />,
       title: "Email Us",
       details: "hello@paisapal.com",
       description: "Send us an email anytime"
@@ -60,7 +60,7 @@ const ContactPage: React.FC = () => {
       description: "Our headquarters"
     },
     {
-      icon: <Clock className="h-6 w-6 text-purple-600" />,
+      icon: <Clock className="h-6 w-6 text-green-600" />,
       title: "Support Hours",
       details: "9:00 AM - 6:00 PM",
       description: "Monday to Friday"
@@ -114,7 +114,7 @@ const ContactPage: React.FC = () => {
         <div className="max-w-7xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
             Get in{' '}
-            <span className="text-indigo-600">Touch</span>
+            <span className="text-green-600">Touch</span>
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             Have questions about PaisaPal? Need help getting started? 
@@ -168,7 +168,7 @@ const ContactPage: React.FC = () => {
                     value={formData.name}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                     placeholder="Your full name"
                   />
                 </div>
@@ -183,7 +183,7 @@ const ContactPage: React.FC = () => {
                     value={formData.email}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                     placeholder="your.email@example.com"
                   />
                 </div>
@@ -197,7 +197,7 @@ const ContactPage: React.FC = () => {
                     value={formData.subject}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                   >
                     <option value="">Select a subject</option>
                     <option value="general">General Inquiry</option>
@@ -218,13 +218,13 @@ const ContactPage: React.FC = () => {
                     onChange={handleInputChange}
                     required
                     rows={5}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                     placeholder="Tell us how we can help you..."
                   />
                 </div>
                 <button
                   type="submit"
-                  className="w-full bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors flex items-center justify-center"
+                  className="w-full bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors flex items-center justify-center"
                 >
                   Send Message
                   <Send className="ml-2 h-5 w-5" />
@@ -251,7 +251,7 @@ const ContactPage: React.FC = () => {
                         <p className="text-gray-600 mb-4">
                           {option.description}
                         </p>
-                        <button className="text-indigo-600 hover:text-indigo-700 font-medium">
+                        <button className="text-green-600 hover:text-green-700 font-medium">
                           {option.action} →
                         </button>
                       </div>
@@ -292,15 +292,21 @@ const ContactPage: React.FC = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="bg-indigo-600 py-20">
+      <section className="bg-green-600 py-20">
         <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
             Ready to Start Your Financial Journey?
           </h2>
-          <p className="text-xl text-indigo-200 mb-8">
+          <p className="text-xl text-green-200 mb-8">
             Don't wait - take control of your finances today
           </p>
-          <button className="bg-white text-indigo-600 hover:bg-gray-100 px-8 py-4 rounded-lg text-lg font-semibold transition-colors">
+          <button 
+            onClick={() => {
+              const event = new KeyboardEvent('keydown', { key: 'o', ctrlKey: true });
+              window.dispatchEvent(event);
+            }}
+            className="bg-white text-green-600 hover:bg-gray-100 px-8 py-4 rounded-lg text-lg font-semibold transition-colors"
+          >
             Get Started Free
           </button>
         </div>
