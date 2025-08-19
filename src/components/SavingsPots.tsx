@@ -1,8 +1,8 @@
-import React from 'react';
-import { Plus, Target, Plane, Smartphone, Shield } from 'lucide-react';
+import React, { useState } from 'react';
+import { Plus, Target, Plane, Smartphone, Shield, X } from 'lucide-react';
 
 const SavingsPots: React.FC = () => {
-  const savingsGoals = [
+  const [savingsGoals, setSavingsGoals] = useState([
     {
       id: 1,
       title: 'Goa Trip',
@@ -33,13 +33,71 @@ const SavingsPots: React.FC = () => {
       bgColor: 'bg-green-50',
       borderColor: 'border-green-200'
     }
-  ];
+  ]);
+
+  const [showNewGoalModal, setShowNewGoalModal] = useState(false);
+  const [showAddMoneyModal, setShowAddMoneyModal] = useState(false);
+  const [selectedGoalId, setSelectedGoalId] = useState<number | null>(null);
+  const [newGoal, setNewGoal] = useState({
+    title: '',
+    target: '',
+    category: 'travel'
+  });
+  const [addMoneyAmount, setAddMoneyAmount] = useState('');
+
+  const goalCategories = {
+    travel: { icon: <Plane className="h-6 w-6 text-blue-600" />, color: 'bg-blue-500', bgColor: 'bg-blue-50', borderColor: 'border-blue-200' },
+    gadget: { icon: <Smartphone className="h-6 w-6 text-purple-600" />, color: 'bg-purple-500', bgColor: 'bg-purple-50', borderColor: 'border-purple-200' },
+    emergency: { icon: <Shield className="h-6 w-6 text-green-600" />, color: 'bg-green-500', bgColor: 'bg-green-50', borderColor: 'border-green-200' },
+    general: { icon: <Target className="h-6 w-6 text-orange-600" />, color: 'bg-orange-500', bgColor: 'bg-orange-50', borderColor: 'border-orange-200' }
+  };
 
   const totalSaved = savingsGoals.reduce((sum, goal) => sum + goal.current, 0);
   const totalTarget = savingsGoals.reduce((sum, goal) => sum + goal.target, 0);
 
   const getProgressPercentage = (current: number, target: number) => {
     return Math.min((current / target) * 100, 100);
+  };
+
+  const handleCreateGoal = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newGoal.title || !newGoal.target) return;
+
+    const categoryData = goalCategories[newGoal.category as keyof typeof goalCategories];
+    const newSavingsGoal = {
+      id: Date.now(),
+      title: newGoal.title,
+      target: parseInt(newGoal.target),
+      current: 0,
+      ...categoryData
+    };
+
+    setSavingsGoals([...savingsGoals, newSavingsGoal]);
+    setNewGoal({ title: '', target: '', category: 'travel' });
+    setShowNewGoalModal(false);
+  };
+
+  const handleAddMoney = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!addMoneyAmount || !selectedGoalId) return;
+
+    const amount = parseInt(addMoneyAmount);
+    setSavingsGoals(goals => 
+      goals.map(goal => 
+        goal.id === selectedGoalId 
+          ? { ...goal, current: Math.min(goal.current + amount, goal.target) }
+          : goal
+      )
+    );
+
+    setAddMoneyAmount('');
+    setSelectedGoalId(null);
+    setShowAddMoneyModal(false);
+  };
+
+  const openAddMoneyModal = (goalId: number) => {
+    setSelectedGoalId(goalId);
+    setShowAddMoneyModal(true);
   };
 
   return (
@@ -55,12 +113,15 @@ const SavingsPots: React.FC = () => {
         </div>
         <div className="text-3xl font-bold mb-2">₹{totalSaved.toLocaleString()}</div>
         <div className="text-green-100">
-          {((totalSaved / totalTarget) * 100).toFixed(1)}% of your total goals
+          {totalTarget > 0 ? ((totalSaved / totalTarget) * 100).toFixed(1) : 0}% of your total goals
         </div>
       </div>
 
       {/* Add New Goal Button */}
-      <button className="w-full bg-white border-2 border-dashed border-gray-300 rounded-2xl p-6 hover:border-indigo-300 hover:bg-indigo-50 transition-colors">
+      <button 
+        onClick={() => setShowNewGoalModal(true)}
+        className="w-full bg-white border-2 border-dashed border-gray-300 rounded-2xl p-6 hover:border-green-300 hover:bg-green-50 transition-colors"
+      >
         <div className="flex items-center justify-center space-x-2 text-gray-600">
           <Plus className="h-6 w-6" />
           <span className="font-medium">Create New Savings Goal</span>
@@ -108,8 +169,12 @@ const SavingsPots: React.FC = () => {
 
               {/* Action Buttons */}
               <div className="flex space-x-3">
-                <button className="flex-1 bg-green-600 hover:bg-green-700 text-white py-3 px-4 rounded-xl font-medium transition-colors">
-                  Add Money
+                <button 
+                  onClick={() => openAddMoneyModal(goal.id)}
+                  disabled={isCompleted}
+                  className="flex-1 bg-green-600 hover:bg-green-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white py-3 px-4 rounded-xl font-medium transition-colors"
+                >
+                  {isCompleted ? 'Goal Achieved!' : 'Add Money'}
                 </button>
                 <button className="px-4 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors">
                   Edit
@@ -138,6 +203,153 @@ const SavingsPots: React.FC = () => {
           Even saving ₹100 daily can help you reach your goals faster!
         </p>
       </div>
+
+      {/* New Goal Modal */}
+      {showNewGoalModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-2xl p-6 w-full max-w-md">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-xl font-semibold text-gray-900">Create New Goal</h3>
+              <button 
+                onClick={() => setShowNewGoalModal(false)}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <X className="h-6 w-6" />
+              </button>
+            </div>
+            
+            <form onSubmit={handleCreateGoal} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Goal Name
+                </label>
+                <input
+                  type="text"
+                  value={newGoal.title}
+                  onChange={(e) => setNewGoal({...newGoal, title: e.target.value})}
+                  placeholder="e.g., New Laptop, Trip to Kerala"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  required
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Target Amount (₹)
+                </label>
+                <input
+                  type="number"
+                  value={newGoal.target}
+                  onChange={(e) => setNewGoal({...newGoal, target: e.target.value})}
+                  placeholder="e.g., 15000"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  required
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Category
+                </label>
+                <select
+                  value={newGoal.category}
+                  onChange={(e) => setNewGoal({...newGoal, category: e.target.value})}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                >
+                  <option value="travel">Travel & Trips</option>
+                  <option value="gadget">Gadgets & Electronics</option>
+                  <option value="emergency">Emergency Fund</option>
+                  <option value="general">General Savings</option>
+                </select>
+              </div>
+              
+              <div className="flex space-x-3 pt-4">
+                <button
+                  type="button"
+                  onClick={() => setShowNewGoalModal(false)}
+                  className="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 bg-green-600 hover:bg-green-700 text-white px-4 py-3 rounded-xl font-medium transition-colors"
+                >
+                  Create Goal
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Add Money Modal */}
+      {showAddMoneyModal && selectedGoalId && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-2xl p-6 w-full max-w-md">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-xl font-semibold text-gray-900">Add Money</h3>
+              <button 
+                onClick={() => setShowAddMoneyModal(false)}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <X className="h-6 w-6" />
+              </button>
+            </div>
+            
+            {(() => {
+              const goal = savingsGoals.find(g => g.id === selectedGoalId);
+              return goal ? (
+                <div className="mb-6">
+                  <div className="flex items-center space-x-3 mb-4">
+                    <div className={`w-12 h-12 ${goal.bgColor} rounded-full flex items-center justify-center`}>
+                      {goal.icon}
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-gray-900">{goal.title}</h4>
+                      <p className="text-sm text-gray-500">
+                        ₹{goal.current.toLocaleString()} of ₹{goal.target.toLocaleString()}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ) : null;
+            })()}
+            
+            <form onSubmit={handleAddMoney} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Amount to Add (₹)
+                </label>
+                <input
+                  type="number"
+                  value={addMoneyAmount}
+                  onChange={(e) => setAddMoneyAmount(e.target.value)}
+                  placeholder="e.g., 500"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  required
+                />
+              </div>
+              
+              <div className="flex space-x-3 pt-4">
+                <button
+                  type="button"
+                  onClick={() => setShowAddMoneyModal(false)}
+                  className="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 bg-green-600 hover:bg-green-700 text-white px-4 py-3 rounded-xl font-medium transition-colors"
+                >
+                  Add Money
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
