@@ -101,7 +101,7 @@ const FeaturesPage: React.FC = () => {
         <div className="max-w-7xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
             Powerful Features for{' '}
-            <span className="text-indigo-600">Smart Money Management</span>
+            <span className="text-green-600">Smart Money Management</span>
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             Discover all the tools and features that make PaisaPal the perfect financial companion for students
@@ -186,7 +186,7 @@ const FeaturesPage: React.FC = () => {
                 <thead className="bg-gray-50">
                   <tr>
                     <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Feature</th>
-                    <th className="px-6 py-4 text-center text-sm font-semibold text-indigo-600">PaisaPal</th>
+                    <th className="px-6 py-4 text-center text-sm font-semibold text-green-600">PaisaPal</th>
                     <th className="px-6 py-4 text-center text-sm font-semibold text-gray-500">Other Apps</th>
                   </tr>
                 </thead>
@@ -227,15 +227,21 @@ const FeaturesPage: React.FC = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="bg-indigo-600 py-20">
+      <section className="bg-green-600 py-20">
         <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
             Ready to Experience All These Features?
           </h2>
-          <p className="text-xl text-indigo-200 mb-8">
+          <p className="text-xl text-green-200 mb-8">
             Start your free account today and take control of your finances
           </p>
-          <button className="bg-white text-indigo-600 hover:bg-gray-100 px-8 py-4 rounded-lg text-lg font-semibold transition-colors">
+          <button 
+            onClick={() => {
+              const event = new KeyboardEvent('keydown', { key: 'o', ctrlKey: true });
+              window.dispatchEvent(event);
+            }}
+            className="bg-white text-green-600 hover:bg-gray-100 px-8 py-4 rounded-lg text-lg font-semibold transition-colors"
+          >
             Get Started Now
           </button>
         </div>

@@ -32,8 +32,8 @@ const Header: React.FC = () => {
                 to={item.href}
                 className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                   isActive(item.href)
-                    ? 'text-indigo-600 bg-indigo-50'
-                    : 'text-gray-700 hover:text-indigo-600 hover:bg-gray-50'
+                    ? 'text-green-600 bg-green-50'
+                    : 'text-gray-700 hover:text-green-600 hover:bg-gray-50'
                 }`}
               >
                 {item.name}
@@ -47,7 +47,7 @@ const Header: React.FC = () => {
                 const event = new KeyboardEvent('keydown', { key: 'd', ctrlKey: true });
                 window.dispatchEvent(event);
               }}
-              className="text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium"
+              className="text-gray-700 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium"
             >
               Demo Dashboard
             </button>
@@ -56,7 +56,7 @@ const Header: React.FC = () => {
                 const event = new KeyboardEvent('keydown', { key: 'o', ctrlKey: true });
                 window.dispatchEvent(event);
               }}
-              className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
+              className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
             >
               Try Onboarding
             </button>
@@ -84,8 +84,8 @@ const Header: React.FC = () => {
                   onClick={() => setIsMenuOpen(false)}
                   className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                     isActive(item.href)
-                      ? 'text-indigo-600 bg-indigo-50'
-                      : 'text-gray-700 hover:text-indigo-600 hover:bg-gray-50'
+                      ? 'text-green-600 bg-green-50'
+                      : 'text-gray-700 hover:text-green-600 hover:bg-gray-50'
                   }`}
                 >
                   {item.name}
@@ -98,7 +98,7 @@ const Header: React.FC = () => {
                     window.dispatchEvent(event);
                     setIsMenuOpen(false);
                   }}
-                  className="w-full text-left text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium"
+                  className="w-full text-left text-gray-700 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium"
                 >
                   Demo Dashboard
                 </button>
@@ -108,7 +108,7 @@ const Header: React.FC = () => {
                     window.dispatchEvent(event);
                     setIsMenuOpen(false);
                   }}
-                  className="w-full text-left bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-2 rounded-md text-sm font-medium mt-2 transition-colors"
+                  className="w-full text-left bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-md text-sm font-medium mt-2 transition-colors"
                 >
                   Try Onboarding
                 </button>

@@ -91,7 +91,7 @@ const AboutPage: React.FC = () => {
         <div className="max-w-7xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
             About{' '}
-            <span className="text-indigo-600">PaisaPal</span>
+            <span className="text-green-600">PaisaPal</span>
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
             We're on a mission to empower every student with the financial tools and knowledge 
@@ -118,7 +118,7 @@ const AboutPage: React.FC = () => {
               </p>
               <div className="flex items-center space-x-4">
                 <div className="flex items-center">
-                  <Target className="h-6 w-6 text-indigo-600 mr-2" />
+                  <Target className="h-6 w-6 text-green-600 mr-2" />
                   <span className="font-semibold text-gray-900">Goal-Oriented</span>
                 </div>
                 <div className="flex items-center">
@@ -130,7 +130,7 @@ const AboutPage: React.FC = () => {
             <div className="bg-gradient-to-br from-indigo-50 to-purple-50 p-8 rounded-2xl">
               <div className="grid grid-cols-2 gap-6">
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-indigo-600 mb-2">50K+</div>
+                  <div className="text-3xl font-bold text-green-600 mb-2">50K+</div>
                   <div className="text-gray-600">Students Helped</div>
                 </div>
                 <div className="text-center">
@@ -138,11 +138,11 @@ const AboutPage: React.FC = () => {
                   <div className="text-gray-600">Money Saved</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-purple-600 mb-2">200+</div>
+                  <div className="text-3xl font-bold text-green-600 mb-2">200+</div>
                   <div className="text-gray-600">Colleges</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-blue-600 mb-2">4.9★</div>
+                  <div className="text-3xl font-bold text-emerald-600 mb-2">4.9★</div>
                   <div className="text-gray-600">User Rating</div>
                 </div>
               </div>
@@ -231,13 +231,13 @@ const AboutPage: React.FC = () => {
           </div>
 
           <div className="relative">
-            <div className="absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-indigo-200"></div>
+            <div className="absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-green-200"></div>
             <div className="space-y-12">
               {milestones.map((milestone, index) => (
                 <div key={index} className={`flex items-center ${index % 2 === 0 ? 'flex-row' : 'flex-row-reverse'}`}>
                   <div className={`w-1/2 ${index % 2 === 0 ? 'pr-8 text-right' : 'pl-8 text-left'}`}>
                     <div className="bg-white p-6 rounded-xl shadow-md">
-                      <div className="text-2xl font-bold text-indigo-600 mb-2">
+                      <div className="text-2xl font-bold text-green-600 mb-2">
                         {milestone.year}
                       </div>
                       <h3 className="text-xl font-semibold text-gray-900 mb-2">
@@ -249,7 +249,7 @@ const AboutPage: React.FC = () => {
                     </div>
                   </div>
                   <div className="relative z-10">
-                    <div className="w-4 h-4 bg-indigo-600 rounded-full border-4 border-white shadow-lg"></div>
+                    <div className="w-4 h-4 bg-green-600 rounded-full border-4 border-white shadow-lg"></div>
                   </div>
                   <div className="w-1/2"></div>
                 </div>
@@ -260,19 +260,25 @@ const AboutPage: React.FC = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="bg-indigo-600 py-20">
+      <section className="bg-green-600 py-20">
         <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
             Join Our Mission
           </h2>
-          <p className="text-xl text-indigo-200 mb-8">
+          <p className="text-xl text-green-200 mb-8">
             Be part of the movement to make financial wellness accessible to every student
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="bg-white text-indigo-600 hover:bg-gray-100 px-8 py-4 rounded-lg text-lg font-semibold transition-colors">
+            <button 
+              onClick={() => {
+                const event = new KeyboardEvent('keydown', { key: 'o', ctrlKey: true });
+                window.dispatchEvent(event);
+              }}
+              className="bg-white text-green-600 hover:bg-gray-100 px-8 py-4 rounded-lg text-lg font-semibold transition-colors"
+            >
               Start Your Journey
             </button>
-            <button className="border-2 border-white text-white hover:bg-white hover:text-indigo-600 px-8 py-4 rounded-lg text-lg font-semibold transition-colors">
+            <button className="border-2 border-white text-white hover:bg-white hover:text-green-600 px-8 py-4 rounded-lg text-lg font-semibold transition-colors">
               Join Our Team
             </button>
           </div>

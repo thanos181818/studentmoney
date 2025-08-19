@@ -69,17 +69,17 @@ const BillSplitting: React.FC = () => {
         </div>
         
         <div className="grid grid-cols-2 gap-3">
-          <button className="flex items-center justify-center space-x-2 p-4 bg-indigo-50 border border-indigo-200 rounded-xl hover:bg-indigo-100 transition-colors">
-            <Plus className="h-5 w-5 text-indigo-600" />
-            <span className="font-medium text-indigo-700">Add Expense</span>
+          <button className="flex items-center justify-center space-x-2 p-4 bg-green-50 border border-green-200 rounded-xl hover:bg-green-100 transition-colors">
+            <Plus className="h-5 w-5 text-green-600" />
+            <span className="font-medium text-green-700">Add Expense</span>
           </button>
           
           <button 
             onClick={() => setShowAddFriends(!showAddFriends)}
-            className="flex items-center justify-center space-x-2 p-4 bg-purple-50 border border-purple-200 rounded-xl hover:bg-purple-100 transition-colors"
+            className="flex items-center justify-center space-x-2 p-4 bg-green-50 border border-green-200 rounded-xl hover:bg-green-100 transition-colors"
           >
-            <Users className="h-5 w-5 text-purple-600" />
-            <span className="font-medium text-purple-700">Add Friends</span>
+            <Users className="h-5 w-5 text-green-600" />
+            <span className="font-medium text-green-700">Add Friends</span>
           </button>
         </div>
       </div>
@@ -155,7 +155,7 @@ const BillSplitting: React.FC = () => {
                 }`}>
                   ₹{settlement.amount}
                 </div>
-                <button className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center space-x-1">
+                <button className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center space-x-1">
                   <Send className="h-4 w-4" />
                   <span>Pay</span>
                 </button>

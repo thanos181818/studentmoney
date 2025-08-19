@@ -98,7 +98,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
                   onClick={() => toggleGoal(goal.id)}
                   className={`p-4 rounded-xl border-2 transition-all ${
                     selectedGoals.includes(goal.id)
-                      ? 'border-indigo-500 bg-indigo-50'
+                      ? 'border-green-500 bg-green-50'
                       : goal.color
                   }`}
                 >
@@ -111,7 +111,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
                       {goal.description}
                     </p>
                     {selectedGoals.includes(goal.id) && (
-                      <Check className="h-5 w-5 text-indigo-600 mt-2" />
+                      <Check className="h-5 w-5 text-green-600 mt-2" />
                     )}
                   </div>
                 </button>
@@ -124,7 +124,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
         return (
           <div className="text-center">
             <div className="mb-6">
-              <Smartphone className="h-16 w-16 text-indigo-600 mx-auto mb-4" />
+              <Smartphone className="h-16 w-16 text-green-600 mx-auto mb-4" />
             </div>
             <h2 className="text-2xl font-bold text-gray-900 mb-4">
               Connect your UPI
@@ -136,7 +136,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
               {upiApps.map((app, index) => (
                 <button
                   key={index}
-                  className={`w-full p-4 rounded-xl border-2 border-gray-200 hover:border-indigo-300 transition-colors ${app.color}`}
+                  className={`w-full p-4 rounded-xl border-2 border-gray-200 hover:border-green-300 transition-colors ${app.color}`}
                 >
                   <div className="flex items-center">
                     <span className="text-2xl mr-3">{app.icon}</span>
@@ -165,7 +165,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
             </p>
             <div className="bg-gradient-to-r from-indigo-50 to-purple-50 p-6 rounded-xl max-w-sm mx-auto">
               <div className="text-sm text-gray-600 mb-2">Your journey starts with</div>
-              <div className="text-2xl font-bold text-indigo-600">Smart Money Management</div>
+              <div className="text-2xl font-bold text-green-600">Smart Money Management</div>
             </div>
           </div>
         );
@@ -185,7 +185,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
               <div
                 key={step}
                 className={`w-3 h-3 rounded-full transition-colors ${
-                  step <= currentStep ? 'bg-indigo-600' : 'bg-gray-200'
+                  step <= currentStep ? 'bg-green-600' : 'bg-gray-200'
                 }`}
               />
             ))}
@@ -198,7 +198,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
           <button
             onClick={nextStep}
             disabled={currentStep === 1 && selectedGoals.length === 0}
-            className="bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-300 text-white px-8 py-3 rounded-xl font-semibold transition-colors flex items-center"
+            className="bg-green-600 hover:bg-green-700 disabled:bg-gray-300 text-white px-8 py-3 rounded-xl font-semibold transition-colors flex items-center"
           >
             {currentStep === 3 ? 'Start Using PaisaPal' : 'Continue'}
             <ArrowRight className="ml-2 h-5 w-5" />

@@ -34,7 +34,7 @@ const Dashboard: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white p-6 rounded-b-3xl">
+      <div className="bg-gradient-to-r from-green-600 to-emerald-600 text-white p-6 rounded-b-3xl">
         <div className="flex justify-between items-start mb-6">
           <div>
             <h1 className="text-2xl font-bold">Hey Arjun! 👋</h1>
@@ -51,7 +51,7 @@ const Dashboard: React.FC = () => {
             <span className="text-indigo-200">Monthly Balance</span>
             <button
               onClick={() => setShowBalance(!showBalance)}
-              className="text-indigo-200 hover:text-white"
+              className="text-green-200 hover:text-white"
             >
               {showBalance ? <Eye className="h-5 w-5" /> : <EyeOff className="h-5 w-5" />}
             </button>
@@ -61,11 +61,11 @@ const Dashboard: React.FC = () => {
           </div>
           <div className="flex justify-between text-sm">
             <div>
-              <div className="text-indigo-200">Spent</div>
+              <div className="text-green-200">Spent</div>
               <div className="font-semibold">₹{totalExpenses.toLocaleString()}</div>
             </div>
             <div>
-              <div className="text-indigo-200">Saved</div>
+              <div className="text-green-200">Saved</div>
               <div className="font-semibold">₹{totalSavings.toLocaleString()}</div>
             </div>
           </div>
@@ -82,7 +82,7 @@ const Dashboard: React.FC = () => {
                 onClick={() => setActiveTab(tab.id)}
                 className={`flex-1 flex items-center justify-center space-x-2 py-3 px-4 rounded-xl transition-colors ${
                   activeTab === tab.id
-                    ? 'bg-indigo-600 text-white'
+                    ? 'bg-green-600 text-white'
                     : 'text-gray-600 hover:bg-gray-50'
                 }`}
               >
@@ -100,7 +100,7 @@ const Dashboard: React.FC = () => {
       </div>
 
       {/* Floating Action Button */}
-      <button className="fixed bottom-6 right-6 bg-indigo-600 hover:bg-indigo-700 text-white w-14 h-14 rounded-full shadow-lg flex items-center justify-center transition-colors">
+      <button className="fixed bottom-6 right-6 bg-green-600 hover:bg-green-700 text-white w-14 h-14 rounded-full shadow-lg flex items-center justify-center transition-colors">
         <Plus className="h-6 w-6" />
       </button>
     </div>

@@ -108,7 +108,7 @@ const SavingsPots: React.FC = () => {
 
               {/* Action Buttons */}
               <div className="flex space-x-3">
-                <button className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white py-3 px-4 rounded-xl font-medium transition-colors">
+                <button className="flex-1 bg-green-600 hover:bg-green-700 text-white py-3 px-4 rounded-xl font-medium transition-colors">
                   Add Money
                 </button>
                 <button className="px-4 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors">

@@ -72,19 +72,25 @@ const HomePage: React.FC = () => {
             <div className="text-center lg:text-left">
               <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
                 Smart Money for{' '}
-                <span className="text-indigo-600">Smart Students</span>
+                <span className="text-green-600">Smart Students</span>
               </h1>
               <p className="text-xl text-gray-600 mb-8 max-w-2xl">
                 Track expenses, split hostel bills, and save smarter — all in one app designed for Indian college life.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                <button className="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-4 rounded-xl text-lg font-semibold transition-colors flex items-center justify-center">
+                <button 
+                  onClick={() => {
+                    const event = new KeyboardEvent('keydown', { key: 'o', ctrlKey: true });
+                    window.dispatchEvent(event);
+                  }}
+                  className="bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-xl text-lg font-semibold transition-colors flex items-center justify-center"
+                >
                   Get Early Access
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </button>
                 <Link 
                   to="/features"
-                  className="border-2 border-indigo-600 text-indigo-600 hover:bg-indigo-50 px-8 py-4 rounded-xl text-lg font-semibold transition-colors flex items-center justify-center"
+                  className="border-2 border-green-600 text-green-600 hover:bg-green-50 px-8 py-4 rounded-xl text-lg font-semibold transition-colors flex items-center justify-center"
                 >
                   See How It Works
                 </Link>
@@ -94,7 +100,7 @@ const HomePage: React.FC = () => {
             {/* Mobile App Mockup */}
             <div className="flex justify-center lg:justify-end">
               <div className="relative">
-                <div className="w-80 h-96 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-3xl p-6 shadow-2xl">
+                <div className="w-80 h-96 bg-gradient-to-br from-green-600 to-emerald-600 rounded-3xl p-6 shadow-2xl">
                   <div className="bg-white rounded-2xl h-full p-4 flex flex-col">
                     <div className="flex items-center justify-between mb-4">
                       <div className="text-lg font-bold text-gray-900">Hey Arjun! 👋</div>
@@ -102,7 +108,7 @@ const HomePage: React.FC = () => {
                         <span className="text-sm">🎓</span>
                       </div>
                     </div>
-                    <div className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white p-4 rounded-xl mb-4">
+                    <div className="bg-gradient-to-r from-green-500 to-emerald-500 text-white p-4 rounded-xl mb-4">
                       <div className="text-sm opacity-90 mb-1">Monthly Balance</div>
                       <div className="text-2xl font-bold">₹8,450</div>
                     </div>
@@ -131,10 +137,10 @@ const HomePage: React.FC = () => {
                   </div>
                 </div>
                 {/* Floating elements */}
-                <div className="absolute -top-4 -right-4 bg-green-500 text-white p-3 rounded-full shadow-lg">
+                <div className="absolute -top-4 -right-4 bg-emerald-500 text-white p-3 rounded-full shadow-lg">
                   <Gift className="h-6 w-6" />
                 </div>
-                <div className="absolute -bottom-4 -left-4 bg-purple-500 text-white p-3 rounded-full shadow-lg">
+                <div className="absolute -bottom-4 -left-4 bg-green-500 text-white p-3 rounded-full shadow-lg">
                   <Users className="h-6 w-6" />
                 </div>
               </div>
@@ -157,7 +163,7 @@ const HomePage: React.FC = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="text-center">
-              <div className="w-20 h-20 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-6">
+              <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
                 <span className="text-3xl">📱</span>
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-4">1. Track</h3>
@@ -168,7 +174,7 @@ const HomePage: React.FC = () => {
             </div>
             
             <div className="text-center">
-              <div className="w-20 h-20 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
+              <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
                 <span className="text-3xl">💰</span>
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-4">2. Save</h3>
@@ -225,32 +231,32 @@ const HomePage: React.FC = () => {
       </section>
 
       {/* Stats Section */}
-      <section className="py-20 bg-gradient-to-r from-indigo-600 to-purple-600">
+      <section className="py-20 bg-gradient-to-r from-green-600 to-emerald-600">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-white mb-4">
               Trusted by Students Across India
             </h2>
-            <p className="text-indigo-200 text-lg">
+            <p className="text-green-200 text-lg">
               Join thousands of students building better money habits
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
             <div>
               <div className="text-4xl font-bold text-white mb-2">25K+</div>
-              <div className="text-indigo-200">Active Students</div>
+              <div className="text-green-200">Active Students</div>
             </div>
             <div>
               <div className="text-4xl font-bold text-white mb-2">₹50L+</div>
-              <div className="text-indigo-200">Bills Split</div>
+              <div className="text-green-200">Bills Split</div>
             </div>
             <div>
               <div className="text-4xl font-bold text-white mb-2">200+</div>
-              <div className="text-indigo-200">Colleges</div>
+              <div className="text-green-200">Colleges</div>
             </div>
             <div>
               <div className="text-4xl font-bold text-white mb-2">4.8★</div>
-              <div className="text-indigo-200">Student Rating</div>
+              <div className="text-green-200">Student Rating</div>
             </div>
           </div>
         </div>
@@ -295,7 +301,7 @@ const HomePage: React.FC = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-br from-blue-50 to-indigo-100">
+      <section className="py-20 bg-gradient-to-br from-green-50 to-emerald-100">
         <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
           <div className="mb-8">
             <span className="text-6xl">🚀</span>
@@ -307,7 +313,13 @@ const HomePage: React.FC = () => {
             Join the waitlist and be among the first students to experience PaisaPal
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-4 rounded-xl text-lg font-semibold transition-colors flex items-center justify-center">
+            <button 
+              onClick={() => {
+                const event = new KeyboardEvent('keydown', { key: 'o', ctrlKey: true });
+                window.dispatchEvent(event);
+              }}
+              className="bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-xl text-lg font-semibold transition-colors flex items-center justify-center"
+            >
               Get Early Access
               <ArrowRight className="ml-2 h-5 w-5" />
             </button>
