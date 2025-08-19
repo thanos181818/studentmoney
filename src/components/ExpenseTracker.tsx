@@ -27,13 +27,64 @@ const ExpenseTracker: React.FC = () => {
     { id: 5, title: 'Stationery', category: 'Misc', amount: -120, time: '3:45 PM', date: 'Yesterday' }
   ]);
 
+  // Define category mappings with consistent colors and icons
+  const categoryMappings = {
+    'Canteen': { 
+      color: 'bg-orange-500', 
+      strokeColor: '#f97316',
+      icon: <Coffee className="h-5 w-5" />, 
+      emoji: '🍕' 
+    },
+    'Transport': { 
+      color: 'bg-blue-500', 
+      strokeColor: '#3b82f6',
+      icon: <Car className="h-5 w-5" />, 
+      emoji: '🚇' 
+    },
+    'Outings': { 
+      color: 'bg-purple-500', 
+      strokeColor: '#a855f7',
+      icon: <Car className="h-5 w-5" />, 
+      emoji: '🎬' 
+    },
+    'Misc': { 
+      color: 'bg-green-500', 
+      strokeColor: '#22c55e',
+      icon: <ShoppingBag className="h-5 w-5" />, 
+      emoji: '📚' 
+    },
+    'Rent': { 
+      color: 'bg-indigo-500', 
+      strokeColor: '#6366f1',
+      icon: <Home className="h-5 w-5" />, 
+      emoji: '🏠' 
+    },
+    'Books': { 
+      color: 'bg-yellow-500', 
+      strokeColor: '#eab308',
+      icon: <ShoppingBag className="h-5 w-5" />, 
+      emoji: '📚' 
+    },
+    'Gym': { 
+      color: 'bg-red-500', 
+      strokeColor: '#ef4444',
+      icon: <MoreHorizontal className="h-5 w-5" />, 
+      emoji: '🏋️' 
+    },
+    'Medicine': { 
+      color: 'bg-pink-500', 
+      strokeColor: '#ec4899',
+      icon: <MoreHorizontal className="h-5 w-5" />, 
+      emoji: '💊' 
+    }
+  };
+
   const [expenseCategories, setExpenseCategories] = React.useState<ExpenseCategory[]>([
     { category: 'Canteen', amount: 1200, percentage: 37, color: 'bg-orange-500', icon: <Coffee className="h-5 w-5" /> },
-    { category: 'Rent', amount: 800, percentage: 25, color: 'bg-blue-500', icon: <Home className="h-5 w-5" /> },
+    { category: 'Rent', amount: 800, percentage: 25, color: 'bg-indigo-500', icon: <Home className="h-5 w-5" /> },
     { category: 'Outings', amount: 750, percentage: 23, color: 'bg-purple-500', icon: <Car className="h-5 w-5" /> },
     { category: 'Misc', amount: 500, percentage: 15, color: 'bg-green-500', icon: <ShoppingBag className="h-5 w-5" /> }
   ]);
-
   const [showAddCategory, setShowAddCategory] = React.useState(false);
   const [newCategory, setNewCategory] = React.useState({
     name: '',
@@ -74,14 +125,16 @@ const ExpenseTracker: React.FC = () => {
           return updated;
         } else {
           // Add new category if it doesn't exist
-          const colors = ['bg-red-500', 'bg-yellow-500', 'bg-indigo-500', 'bg-pink-500', 'bg-teal-500'];
-          const randomColor = colors[Math.floor(Math.random() * colors.length)];
+          const categoryMapping = categoryMappings[categoryName as keyof typeof categoryMappings];
+          const color = categoryMapping?.color || 'bg-gray-500';
+          const icon = categoryMapping?.icon || <MoreHorizontal className="h-5 w-5" />;
+          
           return [...prev, {
             category: categoryName,
             amount: Math.abs(newTransaction.amount),
             percentage: 0, // Will be recalculated
-            color: randomColor,
-            icon: <MoreHorizontal className="h-5 w-5" />
+            color: color,
+            icon: icon
           }];
         }
       });
@@ -108,15 +161,16 @@ const ExpenseTracker: React.FC = () => {
     e.preventDefault();
     if (!newCategory.name) return;
 
-    const colors = ['bg-red-500', 'bg-yellow-500', 'bg-indigo-500', 'bg-pink-500', 'bg-teal-500'];
-    const randomColor = colors[Math.floor(Math.random() * colors.length)];
+    const categoryMapping = categoryMappings[newCategory.name as keyof typeof categoryMappings];
+    const color = categoryMapping?.color || 'bg-gray-500';
+    const icon = categoryMapping?.icon || <span className="text-lg">{newCategory.icon}</span>;
     
     const newCat: ExpenseCategory = {
       category: newCategory.name,
       amount: 0,
       percentage: 0,
-      color: randomColor,
-      icon: <span className="text-lg">{newCategory.icon}</span>
+      color: color,
+      icon: icon
     };
 
     setExpenseCategories(prev => [...prev, newCat]);
@@ -124,12 +178,11 @@ const ExpenseTracker: React.FC = () => {
     setShowAddCategory(false);
   };
 
-  const expenseData = [
-    { category: 'Canteen', amount: 1200, percentage: 37, color: 'bg-orange-500', icon: <Coffee className="h-5 w-5" /> },
-    { category: 'Rent', amount: 800, percentage: 25, color: 'bg-blue-500', icon: <Home className="h-5 w-5" /> },
-    { category: 'Outings', amount: 750, percentage: 23, color: 'bg-purple-500', icon: <Car className="h-5 w-5" /> },
-    { category: 'Misc', amount: 500, percentage: 15, color: 'bg-green-500', icon: <ShoppingBag className="h-5 w-5" /> }
-  ];
+  // Helper function to get category emoji
+  const getCategoryEmoji = (category: string) => {
+    const mapping = categoryMappings[category as keyof typeof categoryMappings];
+    return mapping?.emoji || '📝';
+  };
 
   const groupedTransactions = transactions.reduce((acc, transaction) => {
     if (!acc[transaction.date]) {
@@ -170,6 +223,8 @@ const ExpenseTracker: React.FC = () => {
                 const circumference = 2 * Math.PI * 40;
                 const strokeDasharray = `${(item.percentage / 100) * circumference} ${circumference}`;
                 const strokeDashoffset = -((offset / 100) * circumference);
+                const categoryMapping = categoryMappings[item.category as keyof typeof categoryMappings];
+                const strokeColor = categoryMapping?.strokeColor || '#6b7280';
                 
                 return (
                   <circle
@@ -178,11 +233,10 @@ const ExpenseTracker: React.FC = () => {
                     cy="50"
                     r="40"
                     fill="none"
-                    stroke={item.color.replace('bg-', '').replace('-500', '')}
+                    stroke={strokeColor}
                     strokeWidth="8"
                     strokeDasharray={strokeDasharray}
                     strokeDashoffset={strokeDashoffset}
-                    className={item.color.replace('bg-', 'stroke-')}
                   />
                 );
               })}
@@ -297,11 +351,7 @@ const ExpenseTracker: React.FC = () => {
                   <div key={transaction.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
                     <div className="flex items-center space-x-3">
                       <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm">
-                        <span className="text-lg">
-                          {transaction.category === 'Canteen' ? '🍕' : 
-                           transaction.category === 'Transport' ? '🚇' :
-                           transaction.category === 'Outings' ? '🎬' : '📚'}
-                        </span>
+                        <span className="text-lg">{getCategoryEmoji(transaction.category)}</span>
                       </div>
                       <div>
                         <div className="font-medium text-gray-900">{transaction.title}</div>
