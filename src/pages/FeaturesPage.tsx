@@ -38,7 +38,7 @@ const FeaturesPage: React.FC = () => {
       ]
     },
     {
-      icon: <Target className="h-12 w-12 text-green-600" />,
+      icon: <Target className="h-12 w-12 text-purple-600" />,
       title: "Savings Goals",
       description: "Set and achieve financial milestones with personalized saving strategies",
       features: [
@@ -49,7 +49,7 @@ const FeaturesPage: React.FC = () => {
       ]
     },
     {
-      icon: <BarChart3 className="h-12 w-12 text-green-600" />,
+      icon: <BarChart3 className="h-12 w-12 text-blue-600" />,
       title: "Financial Analytics",
       description: "Comprehensive insights into your financial health and spending patterns",
       features: [
@@ -63,7 +63,7 @@ const FeaturesPage: React.FC = () => {
 
   const additionalFeatures = [
     {
-      icon: <Shield className="h-8 w-8 text-green-600" />,
+      icon: <Shield className="h-8 w-8 text-blue-600" />,
       title: "Bank-Level Security",
       description: "Your data is protected with 256-bit encryption and multi-factor authentication"
     },
@@ -73,22 +73,22 @@ const FeaturesPage: React.FC = () => {
       description: "Designed for mobile with offline capabilities and instant sync"
     },
     {
-      icon: <Bell className="h-8 w-8 text-green-600" />,
+      icon: <Bell className="h-8 w-8 text-yellow-600" />,
       title: "Smart Notifications",
       description: "Get timely alerts about spending limits, bill due dates, and savings opportunities"
     },
     {
-      icon: <CreditCard className="h-8 w-8 text-green-600" />,
+      icon: <CreditCard className="h-8 w-8 text-purple-600" />,
       title: "Multi-Account Support",
       description: "Connect multiple bank accounts, credit cards, and digital wallets"
     },
     {
-      icon: <Calendar className="h-8 w-8 text-green-600" />,
+      icon: <Calendar className="h-8 w-8 text-red-600" />,
       title: "Bill Reminders",
       description: "Never miss a payment with intelligent bill tracking and reminders"
     },
     {
-      icon: <Users className="h-8 w-8 text-green-600" />,
+      icon: <Users className="h-8 w-8 text-indigo-600" />,
       title: "Group Expenses",
       description: "Split bills and track shared expenses with friends and roommates"
     }

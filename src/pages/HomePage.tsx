@@ -104,7 +104,7 @@ const HomePage: React.FC = () => {
                   <div className="bg-white rounded-2xl h-full p-4 flex flex-col">
                     <div className="flex items-center justify-between mb-4">
                       <div className="text-lg font-bold text-gray-900">Hey Arjun! 👋</div>
-                      <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                      <div className="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center">
                         <span className="text-sm">🎓</span>
                       </div>
                     </div>
