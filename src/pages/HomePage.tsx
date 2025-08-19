@@ -317,7 +317,7 @@ const HomePage: React.FC = () => {
           </div>
           <p className="text-sm text-gray-500 mt-4">
             🎓 Free for all verified students • 🔒 Bank-level security • 📱 Available on iOS & Android
-          </PieChart>
+          </p>
         </div>
       </section>
     </div>
