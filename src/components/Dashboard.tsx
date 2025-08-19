@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, TrendingUp, Users, PiggyBank, Eye, EyeOff } from 'lucide-react';
+import { Plus, TrendingUp, Users, PiggyBank, Eye, EyeOff, Receipt } from 'lucide-react';
 import ExpenseTracker from './ExpenseTracker';
 import BillSplitting from './BillSplitting';
 import SavingsPots from './SavingsPots';
@@ -7,6 +7,12 @@ import SavingsPots from './SavingsPots';
 const Dashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState('expenses');
   const [showBalance, setShowBalance] = useState(true);
+  const [showAddTransaction, setShowAddTransaction] = useState(false);
+  const [newTransaction, setNewTransaction] = useState({
+    title: '',
+    amount: '',
+    category: 'canteen'
+  });
 
   const monthlyBalance = 8450;
   const totalExpenses = 3250;
@@ -28,6 +34,43 @@ const Dashboard: React.FC = () => {
         return <BillSplitting />;
       default:
         return <ExpenseTracker />;
+    }
+  };
+
+  const handleAddTransaction = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newTransaction.title || !newTransaction.amount) return;
+
+    // Add transaction logic here
+    alert(`Added transaction: ${newTransaction.title} for ₹${newTransaction.amount}`);
+    
+    // Reset form
+    setNewTransaction({
+      title: '',
+      amount: '',
+      category: 'canteen'
+    });
+    setShowAddTransaction(false);
+  };
+
+  const getFloatingButtonAction = () => {
+    switch (activeTab) {
+      case 'expenses':
+        return () => setShowAddTransaction(true);
+      case 'savings':
+        return () => {
+          // Trigger add savings goal from SavingsPots component
+          const event = new CustomEvent('addSavingsGoal');
+          window.dispatchEvent(event);
+        };
+      case 'splits':
+        return () => {
+          // Trigger add expense from BillSplitting component
+          const event = new CustomEvent('addGroupExpense');
+          window.dispatchEvent(event);
+        };
+      default:
+        return () => setShowAddTransaction(true);
     }
   };
 
@@ -100,9 +143,91 @@ const Dashboard: React.FC = () => {
       </div>
 
       {/* Floating Action Button */}
-      <button className="fixed bottom-6 right-6 bg-green-600 hover:bg-green-700 text-white w-14 h-14 rounded-full shadow-lg flex items-center justify-center transition-colors">
+      <button 
+        onClick={getFloatingButtonAction()}
+        className="fixed bottom-6 right-6 bg-green-600 hover:bg-green-700 text-white w-14 h-14 rounded-full shadow-lg flex items-center justify-center transition-colors"
+      >
         <Plus className="h-6 w-6" />
       </button>
+
+      {/* Add Transaction Modal */}
+      {showAddTransaction && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-2xl p-6 w-full max-w-md">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-xl font-semibold text-gray-900">Add Transaction</h3>
+              <button 
+                onClick={() => setShowAddTransaction(false)}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <Plus className="h-6 w-6 rotate-45" />
+              </button>
+            </div>
+            
+            <form onSubmit={handleAddTransaction} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Description
+                </label>
+                <input
+                  type="text"
+                  value={newTransaction.title}
+                  onChange={(e) => setNewTransaction({...newTransaction, title: e.target.value})}
+                  placeholder="e.g., Lunch at canteen"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  required
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Amount (₹)
+                </label>
+                <input
+                  type="number"
+                  value={newTransaction.amount}
+                  onChange={(e) => setNewTransaction({...newTransaction, amount: e.target.value})}
+                  placeholder="e.g., 150"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  required
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Category
+                </label>
+                <select
+                  value={newTransaction.category}
+                  onChange={(e) => setNewTransaction({...newTransaction, category: e.target.value})}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                >
+                  <option value="canteen">Canteen</option>
+                  <option value="transport">Transport</option>
+                  <option value="outings">Outings</option>
+                  <option value="misc">Miscellaneous</option>
+                </select>
+              </div>
+              
+              <div className="flex space-x-3 pt-4">
+                <button
+                  type="button"
+                  onClick={() => setShowAddTransaction(false)}
+                  className="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 bg-green-600 hover:bg-green-700 text-white px-4 py-3 rounded-xl font-medium transition-colors"
+                >
+                  Add Transaction
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

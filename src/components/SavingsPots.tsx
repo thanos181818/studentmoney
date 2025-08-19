@@ -100,6 +100,16 @@ const SavingsPots: React.FC = () => {
     setShowAddMoneyModal(true);
   };
 
+  // Listen for custom event to trigger new goal modal
+  React.useEffect(() => {
+    const handleAddSavingsGoal = () => {
+      setShowNewGoalModal(true);
+    };
+
+    window.addEventListener('addSavingsGoal', handleAddSavingsGoal);
+    return () => window.removeEventListener('addSavingsGoal', handleAddSavingsGoal);
+  }, []);
+
   return (
     <div className="space-y-6">
       {/* Summary Card */}
