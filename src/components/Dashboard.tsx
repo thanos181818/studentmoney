@@ -8,15 +8,15 @@ const Dashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState('expenses');
   const [showBalance, setShowBalance] = useState(true);
   const [showAddTransaction, setShowAddTransaction] = useState(false);
+  const [monthlyBalance, setMonthlyBalance] = useState(8450);
+  const [totalExpenses, setTotalExpenses] = useState(3250);
+  const [totalSavings, setTotalSavings] = useState(2100);
   const [newTransaction, setNewTransaction] = useState({
     title: '',
     amount: '',
     category: 'canteen'
   });
 
-  const monthlyBalance = 8450;
-  const totalExpenses = 3250;
-  const totalSavings = 2100;
 
   const tabs = [
     { id: 'expenses', label: 'Expenses', icon: <TrendingUp className="h-5 w-5" /> },
@@ -41,11 +41,16 @@ const Dashboard: React.FC = () => {
     e.preventDefault();
     if (!newTransaction.title || !newTransaction.amount) return;
 
+    const transactionAmount = parseInt(newTransaction.amount);
+    
+    // Update balance and expenses
+    setMonthlyBalance(prev => prev - transactionAmount);
+    setTotalExpenses(prev => prev + transactionAmount);
     // Dispatch custom event to ExpenseTracker
     const event = new CustomEvent('addTransaction', {
       detail: {
         title: newTransaction.title,
-        amount: newTransaction.amount,
+        amount: transactionAmount,
         category: newTransaction.category
       }
     });
@@ -60,6 +65,17 @@ const Dashboard: React.FC = () => {
     setShowAddTransaction(false);
   };
 
+  // Listen for savings updates from SavingsPots component
+  React.useEffect(() => {
+    const handleSavingsUpdate = (event: CustomEvent) => {
+      const { amount } = event.detail;
+      setTotalSavings(prev => prev + amount);
+      setMonthlyBalance(prev => prev - amount);
+    };
+
+    window.addEventListener('savingsUpdate', handleSavingsUpdate as EventListener);
+    return () => window.removeEventListener('savingsUpdate', handleSavingsUpdate as EventListener);
+  }, []);
   const getFloatingButtonAction = () => {
     switch (activeTab) {
       case 'expenses':

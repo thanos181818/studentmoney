@@ -90,6 +90,11 @@ const SavingsPots: React.FC = () => {
       )
     );
 
+    // Notify Dashboard about savings update
+    const event = new CustomEvent('savingsUpdate', {
+      detail: { amount }
+    });
+    window.dispatchEvent(event);
     setAddMoneyAmount('');
     setSelectedGoalId(null);
     setShowAddMoneyModal(false);
