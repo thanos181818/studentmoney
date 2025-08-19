@@ -85,7 +85,7 @@ const BillSplitting: React.FC = () => {
         : [...prev.participants, friendName]
     }));
   };
-  return (
+
   // Listen for custom event to trigger add expense modal
   React.useEffect(() => {
     const handleAddGroupExpense = () => {
@@ -96,6 +96,7 @@ const BillSplitting: React.FC = () => {
     return () => window.removeEventListener('addGroupExpense', handleAddGroupExpense);
   }, []);
 
+  return (
     <div className="space-y-6">
       {/* Summary Cards */}
       <div className="grid grid-cols-2 gap-4">
