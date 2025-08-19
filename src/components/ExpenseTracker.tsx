@@ -118,18 +118,18 @@ const ExpenseTracker: React.FC = () => {
       setExpenseCategories(prev => {
         const categoryName = newTransaction.category;
         const existingCategoryIndex = prev.findIndex(cat => cat.category === categoryName);
+        let updatedCategories;
         
         if (existingCategoryIndex >= 0) {
-          const updated = [...prev];
-          updated[existingCategoryIndex].amount += Math.abs(newTransaction.amount);
-          return updated;
+          updatedCategories = [...prev];
+          updatedCategories[existingCategoryIndex].amount += Math.abs(newTransaction.amount);
         } else {
           // Add new category if it doesn't exist
           const categoryMapping = categoryMappings[categoryName as keyof typeof categoryMappings];
           const color = categoryMapping?.color || 'bg-gray-500';
           const icon = categoryMapping?.icon || <MoreHorizontal className="h-5 w-5" />;
           
-          return [...prev, {
+          updatedCategories = [...prev, {
             category: categoryName,
             amount: Math.abs(newTransaction.amount),
             percentage: 0, // Will be recalculated
@@ -137,6 +137,17 @@ const ExpenseTracker: React.FC = () => {
             icon: icon
           }];
         }
+        
+        // Recalculate percentages immediately
+        const total = updatedCategories.reduce((sum, cat) => sum + cat.amount, 0);
+        if (total > 0) {
+          updatedCategories = updatedCategories.map(cat => ({
+            ...cat,
+            percentage: Math.round((cat.amount / total) * 100)
+          }));
+        }
+        
+        return updatedCategories;
       });
     };
 
@@ -155,7 +166,10 @@ const ExpenseTracker: React.FC = () => {
         }))
       );
     }
-  }, [expenseCategories.map(cat => cat.amount).join(',')]);
+  }, [expenseCategories]);
+
+  // Recalculate total for display
+  const totalExpenseAmount = expenseCategories.reduce((sum, cat) => sum + cat.amount, 0);
 
   const handleAddCategory = (e: React.FormEvent) => {
     e.preventDefault();
@@ -243,7 +257,7 @@ const ExpenseTracker: React.FC = () => {
             </svg>
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="text-center">
-                <div className="text-2xl font-bold text-gray-900">₹{expenseCategories.reduce((sum, cat) => sum + cat.amount, 0).toLocaleString()}</div>
+                <div className="text-2xl font-bold text-gray-900">₹{totalExpenseAmount.toLocaleString()}</div>
                 <div className="text-sm text-gray-500">Total Spent</div>
               </div>
             </div>
