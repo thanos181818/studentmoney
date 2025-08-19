@@ -28,8 +28,8 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
       id: 'weekend',
       title: 'Weekend Budget',
       description: 'Movies & outings',
-      icon: <Calendar className="h-8 w-8 text-purple-600" />,
-      color: 'bg-purple-50 border-purple-200'
+      icon: <Calendar className="h-8 w-8 text-green-600" />,
+      color: 'bg-green-50 border-green-200'
     },
     {
       id: 'travel',
@@ -41,9 +41,9 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
   ];
 
   const upiApps = [
-    { name: 'Google Pay', icon: '🟢', color: 'bg-green-100' },
-    { name: 'PhonePe', icon: '🟣', color: 'bg-purple-100' },
-    { name: 'Paytm', icon: '🔵', color: 'bg-blue-100' },
+    { name: 'Google Pay', icon: '🟢', color: 'bg-green-50' },
+    { name: 'PhonePe', icon: '🟣', color: 'bg-green-50' },
+    { name: 'Paytm', icon: '🔵', color: 'bg-green-50' },
     { name: 'Bank Account', icon: '🏦', color: 'bg-gray-100' }
   ];
 
@@ -69,7 +69,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
         return (
           <div className="text-center">
             <div className="mb-8">
-              <div className="w-64 h-64 mx-auto bg-gradient-to-br from-indigo-100 to-purple-100 rounded-3xl flex items-center justify-center mb-6">
+              <div className="w-64 h-64 mx-auto bg-gradient-to-br from-green-100 to-emerald-100 rounded-3xl flex items-center justify-center mb-6">
                 <div className="text-6xl">🎓💰</div>
               </div>
             </div>
@@ -163,7 +163,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
             <p className="text-lg text-gray-600 mb-8">
               Ready to take control of your money and build awesome saving habits!
             </p>
-            <div className="bg-gradient-to-r from-indigo-50 to-purple-50 p-6 rounded-xl max-w-sm mx-auto">
+            <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-6 rounded-xl max-w-sm mx-auto">
               <div className="text-sm text-gray-600 mb-2">Your journey starts with</div>
               <div className="text-2xl font-bold text-green-600">Smart Money Management</div>
             </div>
@@ -176,7 +176,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 flex items-center justify-center p-4">
       <div className="bg-white rounded-3xl shadow-xl p-8 w-full max-w-md">
         {/* Progress Bar */}
         <div className="flex justify-center mb-8">

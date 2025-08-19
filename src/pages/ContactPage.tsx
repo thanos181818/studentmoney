@@ -54,7 +54,7 @@ const ContactPage: React.FC = () => {
       description: "Mon-Fri from 9am to 6pm"
     },
     {
-      icon: <MapPin className="h-6 w-6 text-red-600" />,
+      icon: <MapPin className="h-6 w-6 text-green-600" />,
       title: "Visit Us",
       details: "Bangalore, Karnataka",
       description: "Our headquarters"
@@ -69,7 +69,7 @@ const ContactPage: React.FC = () => {
 
   const supportOptions = [
     {
-      icon: <MessageCircle className="h-8 w-8 text-blue-600" />,
+      icon: <MessageCircle className="h-8 w-8 text-green-600" />,
       title: "Live Chat",
       description: "Get instant help from our support team",
       action: "Start Chat"
@@ -81,7 +81,7 @@ const ContactPage: React.FC = () => {
       action: "Visit Help Center"
     },
     {
-      icon: <Users className="h-8 w-8 text-purple-600" />,
+      icon: <Users className="h-8 w-8 text-green-600" />,
       title: "Community",
       description: "Connect with other students and share tips",
       action: "Join Community"

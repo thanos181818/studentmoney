@@ -13,17 +13,17 @@ import {
 const AboutPage: React.FC = () => {
   const values = [
     {
-      icon: <Heart className="h-8 w-8 text-red-500" />,
+      icon: <Heart className="h-8 w-8 text-green-500" />,
       title: "Student-First",
       description: "Everything we build is designed with students' unique financial needs in mind"
     },
     {
-      icon: <Shield className="h-8 w-8 text-blue-500" />,
+      icon: <Shield className="h-8 w-8 text-green-500" />,
       title: "Trust & Security",
       description: "Your financial data is protected with the highest security standards"
     },
     {
-      icon: <Lightbulb className="h-8 w-8 text-yellow-500" />,
+      icon: <Lightbulb className="h-8 w-8 text-green-500" />,
       title: "Innovation",
       description: "We continuously innovate to provide the best financial tools for students"
     },
@@ -128,6 +128,7 @@ const AboutPage: React.FC = () => {
               </div>
             </div>
             <div className="bg-gradient-to-br from-indigo-50 to-purple-50 p-8 rounded-2xl">
+            <div className="bg-gradient-to-br from-green-50 to-emerald-50 p-8 rounded-2xl">
               <div className="grid grid-cols-2 gap-6">
                 <div className="text-center">
                   <div className="text-3xl font-bold text-green-600 mb-2">50K+</div>
@@ -206,6 +207,7 @@ const AboutPage: React.FC = () => {
                     {member.name}
                   </h3>
                   <p className="text-indigo-600 font-medium mb-3">
+                  <p className="text-green-600 font-medium mb-3">
                     {member.role}
                   </p>
                   <p className="text-gray-600 text-sm">
