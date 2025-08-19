@@ -113,60 +113,45 @@ const ExpenseTracker: React.FC = () => {
       };
       
       setTransactions(prev => [newTransaction, ...prev]);
-      
-      // Update expense categories
-      setExpenseCategories(prev => {
-        const categoryName = newTransaction.category;
-        const existingCategoryIndex = prev.findIndex(cat => cat.category === categoryName);
-        let updatedCategories;
-        
-        if (existingCategoryIndex >= 0) {
-          updatedCategories = [...prev];
-          updatedCategories[existingCategoryIndex].amount += Math.abs(newTransaction.amount);
-        } else {
-          // Add new category if it doesn't exist
-          const categoryMapping = categoryMappings[categoryName as keyof typeof categoryMappings];
-          const color = categoryMapping?.color || 'bg-gray-500';
-          const icon = categoryMapping?.icon || <MoreHorizontal className="h-5 w-5" />;
-          
-          updatedCategories = [...prev, {
-            category: categoryName,
-            amount: Math.abs(newTransaction.amount),
-            percentage: 0, // Will be recalculated
-            color: color,
-            icon: icon
-          }];
-        }
-        
-        // Recalculate percentages immediately
-        const total = updatedCategories.reduce((sum, cat) => sum + cat.amount, 0);
-        if (total > 0) {
-          updatedCategories = updatedCategories.map(cat => ({
-            ...cat,
-            percentage: Math.round((cat.amount / total) * 100)
-          }));
-        }
-        
-        return updatedCategories;
-      });
     };
 
     window.addEventListener('addTransaction', handleAddTransaction as EventListener);
     return () => window.removeEventListener('addTransaction', handleAddTransaction as EventListener);
   }, []);
 
-  // Recalculate percentages when categories change
+  // Recalculate expense categories from transactions
   React.useEffect(() => {
-    const total = expenseCategories.reduce((sum, cat) => sum + cat.amount, 0);
+    // Calculate categories from actual transactions
+    const categoryTotals: Record<string, number> = {};
+    
+    transactions.forEach(transaction => {
+      const category = transaction.category;
+      const amount = Math.abs(transaction.amount);
+      categoryTotals[category] = (categoryTotals[category] || 0) + amount;
+    });
+    
+    // Create expense categories array
+    const newCategories: ExpenseCategory[] = Object.entries(categoryTotals).map(([category, amount]) => {
+      const categoryMapping = categoryMappings[category as keyof typeof categoryMappings];
+      return {
+        category,
+        amount,
+        percentage: 0, // Will be calculated below
+        color: categoryMapping?.color || 'bg-gray-500',
+        icon: categoryMapping?.icon || <MoreHorizontal className="h-5 w-5" />
+      };
+    });
+    
+    // Calculate percentages
+    const total = newCategories.reduce((sum, cat) => sum + cat.amount, 0);
     if (total > 0) {
-      setExpenseCategories(prev => 
-        prev.map(cat => ({
-          ...cat,
-          percentage: Math.round((cat.amount / total) * 100)
-        }))
-      );
+      newCategories.forEach(cat => {
+        cat.percentage = Math.round((cat.amount / total) * 100);
+      });
     }
-  }, [expenseCategories]);
+    
+    setExpenseCategories(newCategories);
+  }, [transactions]);
 
   // Recalculate total for display
   const totalExpenseAmount = expenseCategories.reduce((sum, cat) => sum + cat.amount, 0);
