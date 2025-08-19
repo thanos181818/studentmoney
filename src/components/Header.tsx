@@ -44,15 +44,6 @@ const Header: React.FC = () => {
           <div className="hidden md:flex items-center space-x-4">
             <button 
               onClick={() => {
-                const event = new KeyboardEvent('keydown', { key: 'd', ctrlKey: true });
-                window.dispatchEvent(event);
-              }}
-              className="text-gray-700 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium"
-            >
-              Demo Dashboard
-            </button>
-            <button 
-              onClick={() => {
                 const event = new KeyboardEvent('keydown', { key: 'o', ctrlKey: true });
                 window.dispatchEvent(event);
               }}
