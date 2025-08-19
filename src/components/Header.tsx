@@ -42,11 +42,23 @@ const Header: React.FC = () => {
           </nav>
 
           <div className="hidden md:flex items-center space-x-4">
-            <button className="text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium">
-              Sign In
+            <button 
+              onClick={() => {
+                const event = new KeyboardEvent('keydown', { key: 'd', ctrlKey: true });
+                window.dispatchEvent(event);
+              }}
+              className="text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium"
+            >
+              Demo Dashboard
             </button>
-            <button className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
-              Get Started
+            <button 
+              onClick={() => {
+                const event = new KeyboardEvent('keydown', { key: 'o', ctrlKey: true });
+                window.dispatchEvent(event);
+              }}
+              className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
+            >
+              Try Onboarding
             </button>
           </div>
 
@@ -80,11 +92,25 @@ const Header: React.FC = () => {
                 </Link>
               ))}
               <div className="pt-2 border-t border-gray-200 mt-2">
-                <button className="w-full text-left text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium">
-                  Sign In
+                <button 
+                  onClick={() => {
+                    const event = new KeyboardEvent('keydown', { key: 'd', ctrlKey: true });
+                    window.dispatchEvent(event);
+                    setIsMenuOpen(false);
+                  }}
+                  className="w-full text-left text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium"
+                >
+                  Demo Dashboard
                 </button>
-                <button className="w-full text-left bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-2 rounded-md text-sm font-medium mt-2 transition-colors">
-                  Get Started
+                <button 
+                  onClick={() => {
+                    const event = new KeyboardEvent('keydown', { key: 'o', ctrlKey: true });
+                    window.dispatchEvent(event);
+                    setIsMenuOpen(false);
+                  }}
+                  className="w-full text-left bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-2 rounded-md text-sm font-medium mt-2 transition-colors"
+                >
+                  Try Onboarding
                 </button>
               </div>
             </div>
