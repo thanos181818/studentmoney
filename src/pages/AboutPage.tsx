@@ -36,28 +36,28 @@ const AboutPage: React.FC = () => {
 
   const team = [
     {
-      name: "Arjun Mehta",
+      name: "Sahil Mehta",
       role: "Co-Founder & CEO",
       description: "Former Goldman Sachs analyst with a passion for student financial wellness",
       image: "https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=400"
     },
     {
-      name: "Sneha Patel",
+      name: "Harsh Bhatt",
       role: "Co-Founder & CTO",
       description: "Ex-Google engineer specializing in fintech and mobile applications",
       image: "https://images.pexels.com/photos/3785077/pexels-photo-3785077.jpeg?auto=compress&cs=tinysrgb&w=400"
     },
     {
-      name: "Vikram Singh",
-      role: "Head of Product",
+      name: "Arjun Bagade",
+      role: "Co-Founder & Head of Product",
       description: "Product leader with 8+ years in consumer fintech and student services",
       image: "https://images.pexels.com/photos/2182970/pexels-photo-2182970.jpeg?auto=compress&cs=tinysrgb&w=400"
     },
     {
-      name: "Priya Sharma",
-      role: "Head of Design",
+      name: "Aanish Bangre",
+      role: "Co-Founder & Head of Design",
       description: "UX designer focused on creating intuitive financial experiences",
-      image: "https://images.pexels.com/photos/3756679/pexels-photo-3756679.jpeg?auto=compress&cs=tinysrgb&w=400"
+      image: "https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=400"
     }
   ];
 
