@@ -149,7 +149,7 @@ const HomePage: React.FC = () => {
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               Your Money Journey in 3 Steps
-            </h1>
+            </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
               Simple, smart, and designed for student life
             </p>
