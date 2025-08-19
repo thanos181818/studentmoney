@@ -41,8 +41,15 @@ const Dashboard: React.FC = () => {
     e.preventDefault();
     if (!newTransaction.title || !newTransaction.amount) return;
 
-    // Add transaction logic here
-    alert(`Added transaction: ${newTransaction.title} for ₹${newTransaction.amount}`);
+    // Dispatch custom event to ExpenseTracker
+    const event = new CustomEvent('addTransaction', {
+      detail: {
+        title: newTransaction.title,
+        amount: newTransaction.amount,
+        category: newTransaction.category
+      }
+    });
+    window.dispatchEvent(event);
     
     // Reset form
     setNewTransaction({
@@ -205,7 +212,11 @@ const Dashboard: React.FC = () => {
                   <option value="canteen">Canteen</option>
                   <option value="transport">Transport</option>
                   <option value="outings">Outings</option>
-                  <option value="misc">Miscellaneous</option>
+                  <option value="misc">Misc</option>
+                  <option value="rent">Rent</option>
+                  <option value="books">Books</option>
+                  <option value="gym">Gym</option>
+                  <option value="medicine">Medicine</option>
                 </select>
               </div>
               
