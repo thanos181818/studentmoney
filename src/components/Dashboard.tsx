@@ -73,17 +73,26 @@ const Dashboard: React.FC = () => {
       setMonthlyBalance(prev => prev - amount);
     };
 
-    const handlePaymentMade = (event: CustomEvent) => {
+    const handlePaymentReceived = (event: CustomEvent) => {
       const { amount } = event.detail;
-      // When someone pays you back, increase your balance
+      // When you receive money, increase your balance
       setMonthlyBalance(prev => prev + amount);
     };
 
+    const handlePaymentSent = (event: CustomEvent) => {
+      const { amount } = event.detail;
+      // When you send money, decrease your balance and increase expenses
+      setMonthlyBalance(prev => prev - amount);
+      setTotalExpenses(prev => prev + amount);
+    };
+
     window.addEventListener('savingsUpdate', handleSavingsUpdate as EventListener);
-    window.addEventListener('paymentMade', handlePaymentMade as EventListener);
+    window.addEventListener('paymentReceived', handlePaymentReceived as EventListener);
+    window.addEventListener('paymentSent', handlePaymentSent as EventListener);
     return () => {
       window.removeEventListener('savingsUpdate', handleSavingsUpdate as EventListener);
-      window.removeEventListener('paymentMade', handlePaymentMade as EventListener);
+      window.removeEventListener('paymentReceived', handlePaymentReceived as EventListener);
+      window.removeEventListener('paymentSent', handlePaymentSent as EventListener);
     };
   }, []);
   

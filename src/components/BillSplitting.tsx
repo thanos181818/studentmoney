@@ -63,21 +63,31 @@ const BillSplitting: React.FC = () => {
   const processPayment = () => {
     if (!selectedPayment) return;
     
-    // Notify Dashboard about payment received (increases balance)
-    const event = new CustomEvent('paymentMade', {
-      detail: { amount: selectedPayment.amount }
-    });
-    window.dispatchEvent(event);
+    // Find the settlement to determine payment direction
+    const settlementData = settlements.find(s => s.name === selectedPayment.name);
+    
+    if (settlementData?.type === 'owed') {
+      // Someone owes you - you're receiving money (increase balance)
+      const event = new CustomEvent('paymentReceived', {
+        detail: { amount: selectedPayment.amount }
+      });
+      window.dispatchEvent(event);
+    } else {
+      // You owe someone - you're sending money (decrease balance)
+      const event = new CustomEvent('paymentSent', {
+        detail: { amount: selectedPayment.amount }
+      });
+      window.dispatchEvent(event);
+    }
     
     // Remove the settlement from the list
     setSettlements(prev => prev.filter(s => s.name !== selectedPayment.name));
     
     // Show success message
-    const settlementData = settlements.find(s => s.name === selectedPayment.name);
     if (settlementData?.type === 'owed') {
       alert(`Payment of ₹${selectedPayment.amount} received from ${selectedPayment.name}!`);
     } else {
-      alert(`Payment of ₹${selectedPayment.amount} sent to ${selectedPayment.name}!`);
+      alert(`You paid ₹${selectedPayment.amount} to ${selectedPayment.name}!`);
     }
     setShowPaymentModal(false);
     setSelectedPayment(null);
