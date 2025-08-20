@@ -81,10 +81,12 @@ const Dashboard: React.FC = () => {
 
     window.addEventListener('savingsUpdate', handleSavingsUpdate as EventListener);
     window.addEventListener('paymentMade', handlePaymentMade as EventListener);
-    return () => window.removeEventListener('savingsUpdate', handleSavingsUpdate as EventListener);
-  }, []);
+    return () => {
+      window.removeEventListener('savingsUpdate', handleSavingsUpdate as EventListener);
       window.removeEventListener('paymentMade', handlePaymentMade as EventListener);
     };
+  }, []);
+  
   const getFloatingButtonAction = () => {
     switch (activeTab) {
       case 'expenses':
