@@ -63,7 +63,7 @@ const BillSplitting: React.FC = () => {
   const processPayment = () => {
     if (!selectedPayment) return;
     
-    // Notify Dashboard about payment made (reduces balance)
+    // Notify Dashboard about payment received (increases balance)
     const event = new CustomEvent('paymentMade', {
       detail: { amount: selectedPayment.amount }
     });
@@ -73,7 +73,12 @@ const BillSplitting: React.FC = () => {
     setSettlements(prev => prev.filter(s => s.name !== selectedPayment.name));
     
     // Show success message
-    alert(`Payment of ₹${selectedPayment.amount} sent to ${selectedPayment.name}!`);
+    const settlementData = settlements.find(s => s.name === selectedPayment.name);
+    if (settlementData?.type === 'owed') {
+      alert(`Payment of ₹${selectedPayment.amount} received from ${selectedPayment.name}!`);
+    } else {
+      alert(`Payment of ₹${selectedPayment.amount} sent to ${selectedPayment.name}!`);
+    }
     setShowPaymentModal(false);
     setSelectedPayment(null);
   };
@@ -116,7 +121,7 @@ const BillSplitting: React.FC = () => {
           const existingIndex = updated.findIndex(s => s.name === participant);
           if (existingIndex >= 0) {
             // If they already owe you, add to the amount
-            if (updated[existingIndex].type === 'owes') {
+            if (updated[existingIndex].type === 'owed') {
               updated[existingIndex].amount += splitAmount;
             } else {
               // If you owed them, reduce that amount or flip the relationship
@@ -126,7 +131,7 @@ const BillSplitting: React.FC = () => {
                 updated[existingIndex] = {
                   ...updated[existingIndex],
                   amount: splitAmount - updated[existingIndex].amount,
-                  type: 'owes'
+                  type: 'owed'
                 };
               }
             }
@@ -136,7 +141,7 @@ const BillSplitting: React.FC = () => {
             updated.push({
               name: participant,
               amount: splitAmount,
-              type: 'owes',
+              type: 'owed',
               avatar: friend?.avatar || '👤'
             });
           }

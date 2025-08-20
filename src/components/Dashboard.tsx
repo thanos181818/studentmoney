@@ -75,15 +75,16 @@ const Dashboard: React.FC = () => {
 
     const handlePaymentMade = (event: CustomEvent) => {
       const { amount } = event.detail;
-      setMonthlyBalance(prev => prev - amount);
-      setTotalExpenses(prev => prev + amount);
+      // When someone pays you back, increase your balance
+      setMonthlyBalance(prev => prev + amount);
     };
 
     window.addEventListener('savingsUpdate', handleSavingsUpdate as EventListener);
     window.addEventListener('paymentMade', handlePaymentMade as EventListener);
-      window.removeEventListener('paymentMade', handlePaymentMade as EventListener);
     return () => window.removeEventListener('savingsUpdate', handleSavingsUpdate as EventListener);
   }, []);
+      window.removeEventListener('paymentMade', handlePaymentMade as EventListener);
+    };
   const getFloatingButtonAction = () => {
     switch (activeTab) {
       case 'expenses':
