@@ -223,14 +223,16 @@ const SavingsPots: React.FC = () => {
               {/* Action Buttons */}
               <div className="flex space-x-3">
                 <button 
-                  onClick={() => openEditGoalModal(goal.id)}
                   onClick={() => openAddMoneyModal(goal.id)}
                   disabled={isCompleted}
                   className="flex-1 bg-green-600 hover:bg-green-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white py-3 px-4 rounded-xl font-medium transition-colors"
                 >
                   {isCompleted ? 'Goal Achieved!' : 'Add Money'}
                 </button>
-                <button className="px-4 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors">
+                <button 
+                  onClick={() => openEditGoalModal(goal.id)}
+                  className="px-4 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors"
+                >
                   Edit
                 </button>
               </div>
