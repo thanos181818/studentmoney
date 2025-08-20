@@ -63,6 +63,12 @@ const BillSplitting: React.FC = () => {
   const processPayment = () => {
     if (!selectedPayment) return;
     
+    // Notify Dashboard about payment made (reduces balance)
+    const event = new CustomEvent('paymentMade', {
+      detail: { amount: selectedPayment.amount }
+    });
+    window.dispatchEvent(event);
+    
     // Remove the settlement from the list
     setSettlements(prev => prev.filter(s => s.name !== selectedPayment.name));
     
@@ -109,7 +115,21 @@ const BillSplitting: React.FC = () => {
         participantsWhoOwe.forEach(participant => {
           const existingIndex = updated.findIndex(s => s.name === participant);
           if (existingIndex >= 0) {
-            updated[existingIndex].amount += splitAmount;
+            // If they already owe you, add to the amount
+            if (updated[existingIndex].type === 'owes') {
+              updated[existingIndex].amount += splitAmount;
+            } else {
+              // If you owed them, reduce that amount or flip the relationship
+              if (updated[existingIndex].amount > splitAmount) {
+                updated[existingIndex].amount -= splitAmount;
+              } else {
+                updated[existingIndex] = {
+                  ...updated[existingIndex],
+                  amount: splitAmount - updated[existingIndex].amount,
+                  type: 'owes'
+                };
+              }
+            }
           } else {
             // Find friend avatar
             const friend = friends.find(f => f.name === participant);

@@ -73,7 +73,15 @@ const Dashboard: React.FC = () => {
       setMonthlyBalance(prev => prev - amount);
     };
 
+    const handlePaymentMade = (event: CustomEvent) => {
+      const { amount } = event.detail;
+      setMonthlyBalance(prev => prev - amount);
+      setTotalExpenses(prev => prev + amount);
+    };
+
     window.addEventListener('savingsUpdate', handleSavingsUpdate as EventListener);
+    window.addEventListener('paymentMade', handlePaymentMade as EventListener);
+      window.removeEventListener('paymentMade', handlePaymentMade as EventListener);
     return () => window.removeEventListener('savingsUpdate', handleSavingsUpdate as EventListener);
   }, []);
   const getFloatingButtonAction = () => {
