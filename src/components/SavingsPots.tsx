@@ -37,6 +37,7 @@ const SavingsPots: React.FC = () => {
 
   const [showNewGoalModal, setShowNewGoalModal] = useState(false);
   const [showAddMoneyModal, setShowAddMoneyModal] = useState(false);
+  const [showEditGoalModal, setShowEditGoalModal] = useState(false);
   const [selectedGoalId, setSelectedGoalId] = useState<number | null>(null);
   const [newGoal, setNewGoal] = useState({
     title: '',
@@ -44,6 +45,9 @@ const SavingsPots: React.FC = () => {
     category: 'travel'
   });
   const [addMoneyAmount, setAddMoneyAmount] = useState('');
+  const [editGoalData, setEditGoalData] = useState({
+    newTarget: ''
+  });
 
   const goalCategories = {
     travel: { icon: <Plane className="h-6 w-6 text-blue-600" />, color: 'bg-blue-500', bgColor: 'bg-blue-50', borderColor: 'border-blue-200' },
@@ -103,6 +107,40 @@ const SavingsPots: React.FC = () => {
   const openAddMoneyModal = (goalId: number) => {
     setSelectedGoalId(goalId);
     setShowAddMoneyModal(true);
+  };
+
+  const openEditGoalModal = (goalId: number) => {
+    const goal = savingsGoals.find(g => g.id === goalId);
+    if (goal) {
+      setSelectedGoalId(goalId);
+      setEditGoalData({ newTarget: goal.target.toString() });
+      setShowEditGoalModal(true);
+    }
+  };
+
+  const handleEditGoal = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editGoalData.newTarget || !selectedGoalId) return;
+
+    const newTarget = parseInt(editGoalData.newTarget);
+    const currentGoal = savingsGoals.find(g => g.id === selectedGoalId);
+    
+    if (!currentGoal || newTarget < currentGoal.target) {
+      alert('New target amount must be greater than or equal to the current target.');
+      return;
+    }
+
+    setSavingsGoals(goals => 
+      goals.map(goal => 
+        goal.id === selectedGoalId 
+          ? { ...goal, target: newTarget }
+          : goal
+      )
+    );
+
+    setEditGoalData({ newTarget: '' });
+    setSelectedGoalId(null);
+    setShowEditGoalModal(false);
   };
 
   // Listen for custom event to trigger new goal modal
@@ -185,6 +223,7 @@ const SavingsPots: React.FC = () => {
               {/* Action Buttons */}
               <div className="flex space-x-3">
                 <button 
+                  onClick={() => openEditGoalModal(goal.id)}
                   onClick={() => openAddMoneyModal(goal.id)}
                   disabled={isCompleted}
                   className="flex-1 bg-green-600 hover:bg-green-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white py-3 px-4 rounded-xl font-medium transition-colors"
@@ -359,6 +398,91 @@ const SavingsPots: React.FC = () => {
                   className="flex-1 bg-green-600 hover:bg-green-700 text-white px-4 py-3 rounded-xl font-medium transition-colors"
                 >
                   Add Money
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Goal Modal */}
+      {showEditGoalModal && selectedGoalId && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-2xl p-6 w-full max-w-md">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-xl font-semibold text-gray-900">Edit Savings Goal</h3>
+              <button 
+                onClick={() => setShowEditGoalModal(false)}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <X className="h-6 w-6" />
+              </button>
+            </div>
+            
+            {(() => {
+              const goal = savingsGoals.find(g => g.id === selectedGoalId);
+              return goal ? (
+                <div className="mb-6">
+                  <div className="flex items-center space-x-3 mb-4">
+                    <div className={`w-12 h-12 ${goal.bgColor} rounded-full flex items-center justify-center`}>
+                      {goal.icon}
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-gray-900">{goal.title}</h4>
+                      <p className="text-sm text-gray-500">
+                        Current target: ₹{goal.target.toLocaleString()}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-4">
+                    <p className="text-sm text-yellow-800">
+                      💡 You can only increase your target amount, not decrease it. This helps maintain your savings momentum!
+                    </p>
+                  </div>
+                </div>
+              ) : null;
+            })()}
+            
+            <form onSubmit={handleEditGoal} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  New Target Amount (₹)
+                </label>
+                <input
+                  type="number"
+                  value={editGoalData.newTarget}
+                  onChange={(e) => setEditGoalData({...editGoalData, newTarget: e.target.value})}
+                  min={savingsGoals.find(g => g.id === selectedGoalId)?.target || 0}
+                  placeholder="Enter new target amount"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  required
+                />
+                {(() => {
+                  const currentGoal = savingsGoals.find(g => g.id === selectedGoalId);
+                  const newTarget = parseInt(editGoalData.newTarget) || 0;
+                  const increase = newTarget - (currentGoal?.target || 0);
+                  
+                  return newTarget > (currentGoal?.target || 0) ? (
+                    <p className="text-sm text-green-600 mt-2">
+                      ↗️ Increasing target by ₹{increase.toLocaleString()}
+                    </p>
+                  ) : null;
+                })()}
+              </div>
+              
+              <div className="flex space-x-3 pt-4">
+                <button
+                  type="button"
+                  onClick={() => setShowEditGoalModal(false)}
+                  className="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 bg-green-600 hover:bg-green-700 text-white px-4 py-3 rounded-xl font-medium transition-colors"
+                >
+                  Update Goal
                 </button>
               </div>
             </form>
