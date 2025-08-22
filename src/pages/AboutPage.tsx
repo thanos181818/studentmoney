@@ -65,7 +65,7 @@ const AboutPage: React.FC = () => {
     {
       year: "2022",
       title: "Founded",
-      description: "PaisaPal was founded by two IIT graduates who struggled with financial management during college"
+      description: "BudgetBuddy was founded by two IIT graduates who struggled with financial management during college"
     },
     {
       year: "2023",
@@ -91,7 +91,7 @@ const AboutPage: React.FC = () => {
         <div className="max-w-7xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
             About{' '}
-            <span className="text-green-600">PaisaPal</span>
+            <span className="text-green-600">BudgetBuddy</span>
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
             We're on a mission to empower every student with the financial tools and knowledge 

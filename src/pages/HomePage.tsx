@@ -43,7 +43,7 @@ const HomePage: React.FC = () => {
     {
       name: "Priya Sharma",
       role: "Engineering Student, IIT Delhi",
-      content: "Finally tracked where my pocket money goes! Saved ₹8,000 for my Goa trip using PaisaPal's savings pots.",
+      content: "Finally tracked where my pocket money goes! Saved ₹8,000 for my Goa trip using BudgetBuddy's savings pots.",
       rating: 5,
       avatar: "👩‍🎓"
     },
@@ -270,7 +270,7 @@ const HomePage: React.FC = () => {
               Real Stories from Real Students
             </h2>
             <p className="text-xl text-gray-600">
-              See how PaisaPal is changing student financial habits
+              See how BudgetBuddy is changing student financial habits
             </p>
           </div>
 
@@ -310,7 +310,7 @@ const HomePage: React.FC = () => {
             Ready to Master Your Money?
           </h2>
           <p className="text-xl text-gray-600 mb-8">
-            Join the waitlist and be among the first students to experience PaisaPal
+            Join the waitlist and be among the first students to experience BudgetBuddy
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button 

@@ -10,7 +10,7 @@ const Footer: React.FC = () => {
           <div className="col-span-1 md:col-span-2">
             <div className="flex items-center space-x-2 mb-4">
               <Wallet className="h-8 w-8 text-green-400" />
-              <span className="text-2xl font-bold">PaisaPal</span>
+              <span className="text-2xl font-bold">BudgetBuddy</span>
             </div>
             <p className="text-gray-300 mb-4 max-w-md">
               Empowering students with smart financial tools for a brighter future. 
@@ -19,7 +19,7 @@ const Footer: React.FC = () => {
             <div className="flex space-x-4">
               <div className="flex items-center space-x-2 text-gray-300">
                 <Mail className="h-4 w-4" />
-                <span className="text-sm">hello@paisapal.com</span>
+                <span className="text-sm">hello@budgetbuddy.com</span>
               </div>
             </div>
           </div>
@@ -79,7 +79,7 @@ const Footer: React.FC = () => {
 
         <div className="border-t border-gray-800 mt-8 pt-8 text-center">
           <p className="text-gray-400">
-            © 2025 PaisaPal. All rights reserved. Built for students, by students.
+            © 2025 BudgetBuddy. All rights reserved. Built for students, by students.
           </p>
         </div>
       </div>

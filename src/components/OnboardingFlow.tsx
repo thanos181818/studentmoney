@@ -74,7 +74,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
               </div>
             </div>
             <h1 className="text-3xl font-bold text-gray-900 mb-4">
-              Welcome to PaisaPal!
+              Welcome to BudgetBuddy!
             </h1>
             <p className="text-lg text-gray-600 mb-8 max-w-md mx-auto">
               Your smart money companion for college life. Track expenses, split bills, and save like a pro!
@@ -200,7 +200,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
             disabled={currentStep === 1 && selectedGoals.length === 0}
             className="bg-green-600 hover:bg-green-700 disabled:bg-gray-300 text-white px-8 py-3 rounded-xl font-semibold transition-colors flex items-center"
           >
-            {currentStep === 3 ? 'Start Using PaisaPal' : 'Continue'}
+            {currentStep === 3 ? 'Start Using BudgetBuddy' : 'Continue'}
             <ArrowRight className="ml-2 h-5 w-5" />
           </button>
         </div>

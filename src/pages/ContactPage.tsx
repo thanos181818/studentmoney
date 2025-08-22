@@ -90,8 +90,8 @@ const ContactPage: React.FC = () => {
 
   const faqs = [
     {
-      question: "Is PaisaPal really free for students?",
-      answer: "Yes! PaisaPal is completely free for verified students. We believe financial tools should be accessible to everyone."
+      question: "Is BudgetBuddy really free for students?",
+      answer: "Yes! BudgetBuddy is completely free for verified students. We believe financial tools should be accessible to everyone."
     },
     {
       question: "How secure is my financial data?",
@@ -117,7 +117,7 @@ const ContactPage: React.FC = () => {
             <span className="text-green-600">Touch</span>
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Have questions about PaisaPal? Need help getting started? 
+            Have questions about BudgetBuddy? Need help getting started? 
             We're here to help you on your financial journey.
           </p>
         </div>
