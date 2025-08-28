@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Wallet, Eye, EyeOff, ArrowRight } from 'lucide-react';
+import { authAPI, setAuthToken, setUserData } from '../services/api';
 
 interface AuthScreenProps {
   onAuthComplete: () => void;
@@ -15,6 +16,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthComplete }) => {
     name: ''
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -61,27 +63,36 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthComplete }) => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!validateForm()) return;
 
-    // Check dummy credentials for login
-    if (authMode === 'login') {
-      if (formData.email === 'admin123' && formData.password === 'admin123') {
+    setIsLoading(true);
+    setErrors({});
+
+    try {
+      if (authMode === 'login') {
+        const response = await authAPI.login(formData.email, formData.password);
+        setAuthToken(response.token);
+        setUserData(response.user);
         onAuthComplete();
-      } else {
-        setErrors({ 
-          password: 'Invalid credentials. Use admin123 / admin123 for demo' 
-        });
+      } else if (authMode === 'signup') {
+        const response = await authAPI.register(formData.name, formData.email, formData.password);
+        setAuthToken(response.token);
+        setUserData(response.user);
+        onAuthComplete();
+      } else if (authMode === 'forgot') {
+        await authAPI.forgotPassword(formData.email);
+        alert('Password reset link sent to your email!');
+        setAuthMode('login');
       }
-    } else if (authMode === 'signup') {
-      // For demo, any valid signup goes to onboarding
-      onAuthComplete();
-    } else if (authMode === 'forgot') {
-      // For demo, show success message
-      alert('Password reset link sent to your email!');
-      setAuthMode('login');
+    } catch (error: any) {
+      setErrors({ 
+        password: error.message || 'An error occurred' 
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -151,9 +162,10 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthComplete }) => {
 
             <button
               type="submit"
-              className="w-full bg-green-600 hover:bg-green-700 text-white py-3 px-4 rounded-lg font-semibold transition-colors flex items-center justify-center"
+              disabled={isLoading}
+              className="w-full bg-green-600 hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white py-3 px-4 rounded-lg font-semibold transition-colors flex items-center justify-center"
             >
-              Sign In
+              {isLoading ? 'Signing In...' : 'Sign In'}
               <ArrowRight className="ml-2 h-5 w-5" />
             </button>
 
@@ -264,9 +276,10 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthComplete }) => {
 
             <button
               type="submit"
-              className="w-full bg-green-600 hover:bg-green-700 text-white py-3 px-4 rounded-lg font-semibold transition-colors flex items-center justify-center"
+              disabled={isLoading}
+              className="w-full bg-green-600 hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white py-3 px-4 rounded-lg font-semibold transition-colors flex items-center justify-center"
             >
-              Create Account
+              {isLoading ? 'Creating Account...' : 'Create Account'}
               <ArrowRight className="ml-2 h-5 w-5" />
             </button>
 
@@ -306,9 +319,10 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthComplete }) => {
 
             <button
               type="submit"
-              className="w-full bg-green-600 hover:bg-green-700 text-white py-3 px-4 rounded-lg font-semibold transition-colors flex items-center justify-center"
+              disabled={isLoading}
+              className="w-full bg-green-600 hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white py-3 px-4 rounded-lg font-semibold transition-colors flex items-center justify-center"
             >
-              Send Reset Link
+              {isLoading ? 'Sending...' : 'Send Reset Link'}
               <ArrowRight className="ml-2 h-5 w-5" />
             </button>
 

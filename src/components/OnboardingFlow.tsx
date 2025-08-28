@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ArrowRight, Check, Users, Gift, Calendar, Plane, Smartphone, CreditCard, Zap } from 'lucide-react';
+import { onboardingAPI, getAuthToken } from '../services/api';
 
 interface OnboardingFlowProps {
   onComplete: () => void;
@@ -8,6 +9,8 @@ interface OnboardingFlowProps {
 const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [selectedGoals, setSelectedGoals] = useState<string[]>([]);
+  const [selectedUpiApp, setSelectedUpiApp] = useState<string>('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const goals = [
     {
@@ -55,11 +58,25 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
     );
   };
 
-  const nextStep = () => {
+  const nextStep = async () => {
     if (currentStep < 3) {
       setCurrentStep(currentStep + 1);
     } else {
-      onComplete();
+      // Save onboarding data to backend
+      setIsLoading(true);
+      try {
+        const token = getAuthToken();
+        if (token) {
+          await onboardingAPI.saveOnboardingData(selectedGoals, selectedUpiApp, token);
+        }
+        onComplete();
+      } catch (error) {
+        console.error('Failed to save onboarding data:', error);
+        // Continue to dashboard even if save fails
+        onComplete();
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -136,12 +153,21 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
               {upiApps.map((app, index) => (
                 <button
                   key={index}
-                  className={`w-full p-4 rounded-xl border-2 border-gray-200 hover:border-green-300 transition-colors ${app.color}`}
+                  onClick={() => setSelectedUpiApp(app.name)}
+                  className={`w-full p-4 rounded-xl border-2 transition-colors ${
+                    selectedUpiApp === app.name
+                      ? 'border-green-500 bg-green-50'
+                      : 'border-gray-200 hover:border-green-300'
+                  } ${app.color}`}
                 >
                   <div className="flex items-center">
                     <span className="text-2xl mr-3">{app.icon}</span>
                     <span className="font-medium text-gray-900">{app.name}</span>
-                    <ArrowRight className="h-5 w-5 text-gray-400 ml-auto" />
+                    {selectedUpiApp === app.name ? (
+                      <Check className="h-5 w-5 text-green-600 ml-auto" />
+                    ) : (
+                      <ArrowRight className="h-5 w-5 text-gray-400 ml-auto" />
+                    )}
                   </div>
                 </button>
               ))}
@@ -197,10 +223,14 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
         <div className="mt-8 flex justify-center">
           <button
             onClick={nextStep}
-            disabled={currentStep === 1 && selectedGoals.length === 0}
-            className="bg-green-600 hover:bg-green-700 disabled:bg-gray-300 text-white px-8 py-3 rounded-xl font-semibold transition-colors flex items-center"
+            disabled={
+              (currentStep === 1 && selectedGoals.length === 0) ||
+              (currentStep === 2 && !selectedUpiApp) ||
+              isLoading
+            }
+            className="bg-green-600 hover:bg-green-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white px-8 py-3 rounded-xl font-semibold transition-colors flex items-center"
           >
-            {currentStep === 3 ? 'Start Using BudgetBuddy' : 'Continue'}
+            {isLoading ? 'Saving...' : (currentStep === 3 ? 'Start Using BudgetBuddy' : 'Continue')}
             <ArrowRight className="ml-2 h-5 w-5" />
           </button>
         </div>
