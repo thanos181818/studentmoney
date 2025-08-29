@@ -1,5 +1,6 @@
 import React from 'react';
 import { Coffee, Home, Car, ShoppingBag, MoreHorizontal, Plus, X } from 'lucide-react';
+import { expensesAPI, getAuthToken } from '../services/api';
 
 interface Transaction {
   id: number;
@@ -8,6 +9,7 @@ interface Transaction {
   amount: number;
   time: string;
   date: string;
+  created_at?: string;
 }
 
 interface ExpenseCategory {
@@ -19,13 +21,8 @@ interface ExpenseCategory {
 }
 
 const ExpenseTracker: React.FC = () => {
-  const [transactions, setTransactions] = React.useState<Transaction[]>([
-    { id: 1, title: 'Dominos Pizza', category: 'Canteen', amount: -450, time: '2:30 PM', date: 'Today' },
-    { id: 2, title: 'Metro Card Recharge', category: 'Transport', amount: -200, time: '11:15 AM', date: 'Today' },
-    { id: 3, title: 'Hostel Mess', category: 'Canteen', amount: -150, time: '8:00 AM', date: 'Today' },
-    { id: 4, title: 'Movie Tickets', category: 'Outings', amount: -600, time: '7:30 PM', date: 'Yesterday' },
-    { id: 5, title: 'Stationery', category: 'Misc', amount: -120, time: '3:45 PM', date: 'Yesterday' }
-  ]);
+  const [transactions, setTransactions] = React.useState<Transaction[]>([]);
+  const [isLoading, setIsLoading] = React.useState(true);
 
   // Define category mappings with consistent colors and icons
   const categoryMappings = {
@@ -79,12 +76,7 @@ const ExpenseTracker: React.FC = () => {
     }
   };
 
-  const [expenseCategories, setExpenseCategories] = React.useState<ExpenseCategory[]>([
-    { category: 'Canteen', amount: 1200, percentage: 37, color: 'bg-orange-500', icon: <Coffee className="h-5 w-5" /> },
-    { category: 'Rent', amount: 800, percentage: 25, color: 'bg-indigo-500', icon: <Home className="h-5 w-5" /> },
-    { category: 'Outings', amount: 750, percentage: 23, color: 'bg-purple-500', icon: <Car className="h-5 w-5" /> },
-    { category: 'Misc', amount: 500, percentage: 15, color: 'bg-green-500', icon: <ShoppingBag className="h-5 w-5" /> }
-  ]);
+  const [expenseCategories, setExpenseCategories] = React.useState<ExpenseCategory[]>([]);
   const [showAddCategory, setShowAddCategory] = React.useState(false);
   const [newCategory, setNewCategory] = React.useState({
     name: '',
@@ -95,63 +87,135 @@ const ExpenseTracker: React.FC = () => {
     '🍕', '🚗', '📚', '🎬', '👕', '💊', '🏠', '⚡', '📱', '🎮', '🏋️', '✈️'
   ];
 
-  // Listen for new transactions from Dashboard
+  // Load expenses from backend
   React.useEffect(() => {
-    const handleAddTransaction = (event: CustomEvent) => {
-      const { title, amount, category } = event.detail;
-      const newTransaction: Transaction = {
-        id: Date.now(),
-        title,
-        category: category.charAt(0).toUpperCase() + category.slice(1),
-        amount: -parseInt(amount),
-        time: new Date().toLocaleTimeString('en-US', { 
-          hour: 'numeric', 
-          minute: '2-digit', 
-          hour12: true 
-        }),
-        date: 'Today'
-      };
-      
-      setTransactions(prev => [newTransaction, ...prev]);
+    const loadExpenses = async () => {
+      try {
+        const token = getAuthToken();
+        if (token) {
+          const data = await expensesAPI.getExpenses(token);
+          
+          // Transform backend data to frontend format
+          const transformedTransactions = data.expenses.map((expense: any) => {
+            const createdAt = new Date(expense.created_at);
+            const today = new Date();
+            const yesterday = new Date(today);
+            yesterday.setDate(yesterday.getDate() - 1);
+            
+            let dateLabel = 'Today';
+            if (createdAt.toDateString() === yesterday.toDateString()) {
+              dateLabel = 'Yesterday';
+            } else if (createdAt.toDateString() !== today.toDateString()) {
+              dateLabel = createdAt.toLocaleDateString();
+            }
+            
+            return {
+              id: expense.id,
+              title: expense.title,
+              category: expense.category,
+              amount: -expense.amount, // Negative for expenses
+              time: createdAt.toLocaleTimeString('en-US', { 
+                hour: 'numeric', 
+                minute: '2-digit', 
+                hour12: true 
+              }),
+              date: dateLabel,
+              created_at: expense.created_at
+            };
+          });
+          
+          setTransactions(transformedTransactions);
+        }
+      } catch (error) {
+        console.error('Failed to load expenses:', error);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
-    window.addEventListener('addTransaction', handleAddTransaction as EventListener);
-    return () => window.removeEventListener('addTransaction', handleAddTransaction as EventListener);
+    loadExpenses();
   }, []);
 
-  // Recalculate expense categories from transactions
+  // Load expense categories from backend
   React.useEffect(() => {
-    // Calculate categories from actual transactions
-    const categoryTotals: Record<string, number> = {};
-    
-    transactions.forEach(transaction => {
-      const category = transaction.category;
-      const amount = Math.abs(transaction.amount);
-      categoryTotals[category] = (categoryTotals[category] || 0) + amount;
-    });
-    
-    // Create expense categories array
-    const newCategories: ExpenseCategory[] = Object.entries(categoryTotals).map(([category, amount]) => {
-      const categoryMapping = categoryMappings[category as keyof typeof categoryMappings];
-      return {
-        category,
-        amount,
-        percentage: 0, // Will be calculated below
-        color: categoryMapping?.color || 'bg-gray-500',
-        icon: categoryMapping?.icon || <MoreHorizontal className="h-5 w-5" />
-      };
-    });
-    
-    // Calculate percentages
-    const total = newCategories.reduce((sum, cat) => sum + cat.amount, 0);
-    if (total > 0) {
-      newCategories.forEach(cat => {
-        cat.percentage = Math.round((cat.amount / total) * 100);
-      });
+    const loadCategories = async () => {
+      try {
+        const token = getAuthToken();
+        if (token) {
+          const data = await expensesAPI.getCategories(token);
+          
+          // Transform backend data to frontend format
+          const transformedCategories = data.categories.map((cat: any) => {
+            const categoryMapping = categoryMappings[cat.category as keyof typeof categoryMappings];
+            return {
+              category: cat.category,
+              amount: cat.amount,
+              percentage: cat.percentage,
+              color: categoryMapping?.color || 'bg-gray-500',
+              icon: categoryMapping?.icon || <MoreHorizontal className="h-5 w-5" />
+            };
+          });
+          
+          setExpenseCategories(transformedCategories);
+        }
+      } catch (error) {
+        console.error('Failed to load categories:', error);
+      }
+    };
+
+    if (transactions.length > 0) {
+      loadCategories();
     }
-    
-    setExpenseCategories(newCategories);
   }, [transactions]);
+
+  // Listen for refresh events from Dashboard
+  React.useEffect(() => {
+    const handleRefreshExpenses = async () => {
+      try {
+        const token = getAuthToken();
+        if (token) {
+          const data = await expensesAPI.getExpenses(token);
+          
+          // Transform backend data to frontend format
+          const transformedTransactions = data.expenses.map((expense: any) => {
+            const createdAt = new Date(expense.created_at);
+            const today = new Date();
+            const yesterday = new Date(today);
+            yesterday.setDate(yesterday.getDate() - 1);
+            
+            let dateLabel = 'Today';
+            if (createdAt.toDateString() === yesterday.toDateString()) {
+              dateLabel = 'Yesterday';
+            } else if (createdAt.toDateString() !== today.toDateString()) {
+              dateLabel = createdAt.toLocaleDateString();
+            }
+            
+            return {
+              id: expense.id,
+              title: expense.title,
+              category: expense.category,
+              amount: -expense.amount,
+              time: createdAt.toLocaleTimeString('en-US', { 
+                hour: 'numeric', 
+                minute: '2-digit', 
+                hour12: true 
+              }),
+              date: dateLabel,
+              created_at: expense.created_at
+            };
+          });
+          
+          setTransactions(transformedTransactions);
+        }
+      } catch (error) {
+        console.error('Failed to refresh expenses:', error);
+      }
+    };
+
+    window.addEventListener('refreshExpenses', handleRefreshExpenses);
+    return () => window.removeEventListener('refreshExpenses', handleRefreshExpenses);
+  }, []);
+
 
   // Recalculate total for display
   const totalExpenseAmount = expenseCategories.reduce((sum, cat) => sum + cat.amount, 0);
@@ -339,33 +403,56 @@ const ExpenseTracker: React.FC = () => {
       <div className="bg-white rounded-2xl p-6 shadow-sm">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Transactions</h3>
         
-        <div className="space-y-4">
-          {Object.entries(groupedTransactions).map(([date, dayTransactions]) => (
-            <div key={date}>
-              <div className="text-sm font-medium text-gray-500 mb-2 uppercase tracking-wide">
-                {date}
-              </div>
-              <div className="space-y-2">
-                {dayTransactions.map((transaction) => (
-                  <div key={transaction.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm">
-                        <span className="text-lg">{getCategoryEmoji(transaction.category)}</span>
-                      </div>
-                      <div>
-                        <div className="font-medium text-gray-900">{transaction.title}</div>
-                        <div className="text-sm text-gray-500">{transaction.category} • {transaction.time}</div>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <div className="font-semibold text-red-600">₹{Math.abs(transaction.amount)}</div>
-                    </div>
+        {isLoading ? (
+          <div className="space-y-3">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="animate-pulse">
+                <div className="flex items-center space-x-3 p-3 bg-gray-100 rounded-xl">
+                  <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
+                  <div className="flex-1">
+                    <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+                    <div className="h-3 bg-gray-200 rounded w-1/2"></div>
                   </div>
-                ))}
+                  <div className="h-4 bg-gray-200 rounded w-16"></div>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        ) : transactions.length === 0 ? (
+          <div className="text-center py-8">
+            <div className="text-4xl mb-4">📝</div>
+            <h4 className="text-lg font-medium text-gray-900 mb-2">No transactions yet</h4>
+            <p className="text-gray-500">Add your first expense to get started!</p>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {Object.entries(groupedTransactions).map(([date, dayTransactions]) => (
+              <div key={date}>
+                <div className="text-sm font-medium text-gray-500 mb-2 uppercase tracking-wide">
+                  {date}
+                </div>
+                <div className="space-y-2">
+                  {dayTransactions.map((transaction) => (
+                    <div key={transaction.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm">
+                          <span className="text-lg">{getCategoryEmoji(transaction.category)}</span>
+                        </div>
+                        <div>
+                          <div className="font-medium text-gray-900">{transaction.title}</div>
+                          <div className="text-sm text-gray-500">{transaction.category} • {transaction.time}</div>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="font-semibold text-red-600">₹{Math.abs(transaction.amount)}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

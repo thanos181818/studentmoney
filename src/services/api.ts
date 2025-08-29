@@ -121,3 +121,76 @@ export const setUserData = (user: any) => {
 export const removeUserData = () => {
   localStorage.removeItem('budgetbuddy_user');
 };
+
+// Expenses API calls
+export const expensesAPI = {
+  getExpenses: async (token: string) => {
+    const response = await fetch(`${API_BASE_URL}/expenses`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    const data = await response.json();
+    
+    if (!response.ok) {
+      throw new Error(data.error || 'Failed to get expenses');
+    }
+
+    return data;
+  },
+
+  addExpense: async (title: string, amount: number, category: string, token: string) => {
+    const response = await fetch(`${API_BASE_URL}/expenses`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify({ title, amount, category }),
+    });
+
+    const data = await response.json();
+    
+    if (!response.ok) {
+      throw new Error(data.error || 'Failed to add expense');
+    }
+
+    return data;
+  },
+
+  getCategories: async (token: string) => {
+    const response = await fetch(`${API_BASE_URL}/expenses/categories`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    const data = await response.json();
+    
+    if (!response.ok) {
+      throw new Error(data.error || 'Failed to get categories');
+    }
+
+    return data;
+  },
+
+  getSummary: async (token: string) => {
+    const response = await fetch(`${API_BASE_URL}/expenses/summary`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    const data = await response.json();
+    
+    if (!response.ok) {
+      throw new Error(data.error || 'Failed to get summary');
+    }
+
+    return data;
+  },
+};

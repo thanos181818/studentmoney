@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Plus, TrendingUp, Users, PiggyBank, Eye, EyeOff, Receipt } from 'lucide-react';
+import { expensesAPI, getAuthToken } from '../services/api';
 import ExpenseTracker from './ExpenseTracker';
 import BillSplitting from './BillSplitting';
 import SavingsPots from './SavingsPots';
@@ -8,15 +9,36 @@ const Dashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState('expenses');
   const [showBalance, setShowBalance] = useState(true);
   const [showAddTransaction, setShowAddTransaction] = useState(false);
-  const [monthlyBalance, setMonthlyBalance] = useState(8450);
-  const [totalExpenses, setTotalExpenses] = useState(3250);
-  const [totalSavings, setTotalSavings] = useState(2100);
+  const [monthlyBalance, setMonthlyBalance] = useState(0);
+  const [totalExpenses, setTotalExpenses] = useState(0);
+  const [totalSavings, setTotalSavings] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
   const [newTransaction, setNewTransaction] = useState({
     title: '',
     amount: '',
     category: 'canteen'
   });
 
+  // Load financial summary on component mount
+  React.useEffect(() => {
+    const loadSummary = async () => {
+      try {
+        const token = getAuthToken();
+        if (token) {
+          const summary = await expensesAPI.getSummary(token);
+          setMonthlyBalance(summary.monthlyBalance);
+          setTotalExpenses(summary.totalExpenses);
+          setTotalSavings(summary.totalSavings);
+        }
+      } catch (error) {
+        console.error('Failed to load summary:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadSummary();
+  }, []);
 
   const tabs = [
     { id: 'expenses', label: 'Expenses', icon: <TrendingUp className="h-5 w-5" /> },
@@ -37,32 +59,45 @@ const Dashboard: React.FC = () => {
     }
   };
 
-  const handleAddTransaction = (e: React.FormEvent) => {
+  const handleAddTransaction = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newTransaction.title || !newTransaction.amount) return;
 
-    const transactionAmount = parseInt(newTransaction.amount);
-    
-    // Update balance and expenses
-    setMonthlyBalance(prev => prev - transactionAmount);
-    setTotalExpenses(prev => prev + transactionAmount);
-    // Dispatch custom event to ExpenseTracker
-    const event = new CustomEvent('addTransaction', {
-      detail: {
-        title: newTransaction.title,
-        amount: transactionAmount,
-        category: newTransaction.category
+    try {
+      const token = getAuthToken();
+      if (!token) {
+        alert('Please login again');
+        return;
       }
-    });
-    window.dispatchEvent(event);
-    
-    // Reset form
-    setNewTransaction({
-      title: '',
-      amount: '',
-      category: 'canteen'
-    });
-    setShowAddTransaction(false);
+
+      const transactionAmount = parseInt(newTransaction.amount);
+      
+      // Add expense to backend
+      await expensesAPI.addExpense(
+        newTransaction.title,
+        transactionAmount,
+        newTransaction.category,
+        token
+      );
+      
+      // Update local state
+      setMonthlyBalance(prev => prev - transactionAmount);
+      setTotalExpenses(prev => prev + transactionAmount);
+      
+      // Dispatch custom event to ExpenseTracker to refresh data
+      const event = new CustomEvent('refreshExpenses');
+      window.dispatchEvent(event);
+      
+      // Reset form
+      setNewTransaction({
+        title: '',
+        amount: '',
+        category: 'canteen'
+      });
+      setShowAddTransaction(false);
+    } catch (error: any) {
+      alert(error.message || 'Failed to add expense');
+    }
   };
 
   // Listen for savings updates from SavingsPots component
@@ -143,16 +178,16 @@ const Dashboard: React.FC = () => {
             </button>
           </div>
           <div className="text-3xl font-bold mb-4">
-            {showBalance ? `₹${monthlyBalance.toLocaleString()}` : '₹••••••'}
+            {isLoading ? '₹••••••' : (showBalance ? `₹${monthlyBalance.toLocaleString()}` : '₹••••••')}
           </div>
           <div className="flex justify-between text-sm">
             <div>
               <div className="text-green-200">Spent</div>
-              <div className="font-semibold">₹{totalExpenses.toLocaleString()}</div>
+              <div className="font-semibold">₹{isLoading ? '•••' : totalExpenses.toLocaleString()}</div>
             </div>
             <div>
               <div className="text-green-200">Saved</div>
-              <div className="font-semibold">₹{totalSavings.toLocaleString()}</div>
+              <div className="font-semibold">₹{isLoading ? '•••' : totalSavings.toLocaleString()}</div>
             </div>
           </div>
         </div>
