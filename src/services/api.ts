@@ -122,6 +122,100 @@ export const removeUserData = () => {
   localStorage.removeItem('budgetbuddy_user');
 };
 
+// Savings API calls
+export const savingsAPI = {
+  getSavingsGoals: async (token: string) => {
+    const response = await fetch(`${API_BASE_URL}/savings`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    const data = await response.json();
+    
+    if (!response.ok) {
+      throw new Error(data.error || 'Failed to get savings goals');
+    }
+
+    return data;
+  },
+
+  createSavingsGoal: async (title: string, target: number, category: string, token: string) => {
+    const response = await fetch(`${API_BASE_URL}/savings`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify({ title, target, category }),
+    });
+
+    const data = await response.json();
+    
+    if (!response.ok) {
+      throw new Error(data.error || 'Failed to create savings goal');
+    }
+
+    return data;
+  },
+
+  addMoneyToGoal: async (goalId: number, amount: number, token: string) => {
+    const response = await fetch(`${API_BASE_URL}/savings/${goalId}/add-money`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify({ amount }),
+    });
+
+    const data = await response.json();
+    
+    if (!response.ok) {
+      throw new Error(data.error || 'Failed to add money to goal');
+    }
+
+    return data;
+  },
+
+  updateSavingsGoal: async (goalId: number, target: number, token: string) => {
+    const response = await fetch(`${API_BASE_URL}/savings/${goalId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify({ target }),
+    });
+
+    const data = await response.json();
+    
+    if (!response.ok) {
+      throw new Error(data.error || 'Failed to update savings goal');
+    }
+
+    return data;
+  },
+
+  deleteSavingsGoal: async (goalId: number, token: string) => {
+    const response = await fetch(`${API_BASE_URL}/savings/${goalId}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    const data = await response.json();
+    
+    if (!response.ok) {
+      throw new Error(data.error || 'Failed to delete savings goal');
+    }
+
+    return data;
+  },
+};
+
 // Expenses API calls
 export const expensesAPI = {
   getExpenses: async (token: string) => {
