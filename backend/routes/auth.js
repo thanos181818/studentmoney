@@ -76,7 +76,7 @@ router.post('/login', (req, res) => {
     }
 
     // Check for demo credentials
-    if (email === 'admin123' && password === 'admin123') {
+    if (email === 'demo@student.com' && password === 'demo123') {
       const token = jwt.sign(
         { userId: 999, email: 'admin123' },
         process.env.JWT_SECRET,
@@ -89,7 +89,7 @@ router.post('/login', (req, res) => {
         user: {
           id: 999,
           name: 'Demo User',
-          email: 'admin123'
+          email: 'demo@student.com'
         }
       });
     }

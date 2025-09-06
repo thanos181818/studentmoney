@@ -392,8 +392,8 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthComplete }) => {
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
             <div className="text-sm text-blue-800">
               <div className="font-medium mb-1">Demo Credentials:</div>
-              <div>Username: <span className="font-mono">admin123</span></div>
-              <div>Password: <span className="font-mono">admin123</span></div>
+              <div>Email: <span className="font-mono">demo@student.com</span></div>
+              <div>Password: <span className="font-mono">demo123</span></div>
             </div>
           </div>
         )}
